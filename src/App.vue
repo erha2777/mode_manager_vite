@@ -21,7 +21,7 @@ let rootFolders: any = reactive([]) // 一级目录
 let folderContent: any = reactive([]) // 文件夹内容
 // let folderName: any = ref('')
 let currentFolder: any = reactive({}) // 当前点击的顶级文件夹
-let currentFile: any = reactive({}) // 当前选中的文件数据
+let currentFile: any = ref({}) // 当前选中的文件数据
 let currentFileEdit: any = reactive({
     type: '',
     fileName: '',
@@ -37,7 +37,6 @@ let selectFiles: any = reactive([]) // 选中的文件
 let preFolder: any = reactive([]) // 上级目录
 let generalModes: any = reactive({}) // 通用mode
 let currentClick: any = reactive({}) // 通用mode
-
 
 const init = () => {
     // 获取全部配置
@@ -56,9 +55,10 @@ const selectFilePath = computed(() => {
     let arr = preFolder.map((v: any) => v.fileName)
     return arr.join('/')
 })
+
 const currentPreview = computed(() => {
-    if (currentFile.name) {
-        return currentFile
+    if (currentFile.value.name) {
+        return currentFile.value
     }
     if (selectFilePath.value && selectFiles[selectFilePath.value]) {
         return selectFiles[selectFilePath.value]
@@ -184,7 +184,7 @@ const changeContent = (item: any, clear?: boolean) => {
     if (clear) {
         preFolder.splice(0, preFolder.length)
         preFolder.push(item)
-        currentFile = {}
+        currentFile.value = {}
     }
     setFiles(item)
 }
@@ -201,7 +201,7 @@ const fileGoBack = (item: any) => {
 // 设置文件夹内容
 const setFiles = (item: any) => {
     currentFolder = item
-    currentFile = currentPreview
+    currentFile.value = currentPreview.value
     let files = getContent(item.path)
     files.sort((a: any, b: any) => {
         if (a.type === 'mode') {
@@ -258,7 +258,7 @@ const selectFile = (item: any) => {
                     setCurrentFile(item)
                 } else {
                     generalModes[selectFilePath.value].splice(index, 1)
-                    currentFile = {}
+                    currentFile.value = {}
                 }
             } else {
                 generalModes[selectFilePath.value] = [item]
@@ -268,7 +268,7 @@ const selectFile = (item: any) => {
             if (selectFiles?.[selectFilePath.value]) {
                 if (selectFiles[selectFilePath.value].path === item.path) {
                     selectFiles[selectFilePath.value] = null
-                    currentFile = {}
+                    currentFile.value = {}
                     // 取消选中的是mods文件夹，下面的mod也要取消选中
                     if (item.type === 'modes') {
                         Object.keys(selectFiles).forEach((key) => {
@@ -297,7 +297,7 @@ const selectFile = (item: any) => {
 
 // 设置当前选中文件数据
 const setCurrentFile = (item: any) => {
-    currentFile = item
+    currentFile.value = item
     Object.keys(item).forEach((key) => {
         currentFileEdit[key] = JSON.parse(JSON.stringify(item[key]))
     })
@@ -305,8 +305,8 @@ const setCurrentFile = (item: any) => {
 
 // 打开modes文件夹
 const openModesFolder = () => {
-    preFolder.push(currentFile)
-    changeContent(currentFile)
+    preFolder.push(currentFile.value)
+    changeContent(currentFile.value)
 }
 
 // 过滤选中
@@ -343,14 +343,14 @@ const filterImgPath = (path: string) => {
 // 显示编辑弹窗
 const showEditDialog = () => {
     if (selectFilePath.value && selectFiles[selectFilePath.value]) {
-        currentFile = currentPreview.value
+        currentFile.value = currentPreview.value
     } else if (selectFilePath.value && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
-        currentFile = currentPreview.value
+        currentFile.value = currentPreview.value
     } else {
-        currentFile = currentFolder
+        currentFile.value = currentFolder
     }
-    Object.keys(currentFile).forEach((key) => {
-        currentFileEdit[key] = JSON.parse(JSON.stringify(currentFile[key]))
+    Object.keys(currentFile.value).forEach((key) => {
+        currentFileEdit[key] = JSON.parse(JSON.stringify(currentFile.value[key]))
     })
     editShow.value = true
 }
@@ -554,7 +554,7 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
                         <div class="edit-btn" @click="showEditDialog">编辑</div>
                         <div class="edit-btn" v-if="currentPreview.type === 'modes' && currentPreview.path !== currentFolder.path" @click.stop="openModesFolder">打开</div>
                     </div>
-                    <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentPreview, null, 4) }}</pre>
+                    <!-- <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentPreview, null, 4) }}</pre> -->
                 </div>
             </div>
         </div>
@@ -565,6 +565,4 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
     </div>
 </template>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
