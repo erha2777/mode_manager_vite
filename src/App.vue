@@ -502,7 +502,7 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
                         <div
                             class="file-list-item"
                             v-for="(item, i) in folderContent"
-                            :key="i"
+                            :key="i + item.cover"
                             :class="{
                                 border_folder: item.type === 'folder',
                                 border_file: item.type === 'file',
