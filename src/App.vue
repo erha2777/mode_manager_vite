@@ -46,6 +46,11 @@ const init = () => {
         config = JSON.parse(data)
         print()
     })
+
+    let selectFilesVal = window.localStorage.getItem('selectFiles')
+    selectFiles = JSON.parse(selectFilesVal || '{}')
+    let generalModesVal = window.localStorage.getItem('generalModes')
+    generalModes = JSON.parse(generalModesVal || '{}')
 }
 
 init()
@@ -415,6 +420,8 @@ const application = async () => {
     await deleteAllFilesInFolder(modesPath.value)
     console.debug('selectFiles', selectFiles)
     console.debug('generalModes', generalModes)
+    window.localStorage.setItem('selectFiles',JSON.stringify(selectFiles))
+    window.localStorage.setItem('generalModes',JSON.stringify(generalModes))
     Object.keys(selectFiles).forEach((key) => {
         if (selectFiles[key]) {
             if (selectFiles[key] && selectFiles[key].type === 'mode') {
