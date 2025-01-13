@@ -11,7 +11,7 @@ const fileType: any = {
     firstFolder: '一级目录',
     generalMode: '通用mode',
 }
-const { editShow, currentFileEdit, currentFile,isModeType } = defineProps({
+const { editShow, currentFileEdit, currentFile, isModeType, folderContent } = defineProps({
     editShow: Boolean,
     currentFileEdit: {
         type: Object,
@@ -41,6 +41,10 @@ const { editShow, currentFileEdit, currentFile,isModeType } = defineProps({
                 url: '',
             }
         },
+    },
+    folderContent: {
+        type: Object,
+        default: () => [],
     },
 })
 
@@ -124,8 +128,14 @@ const openFolder = () => {
 }
 // 保存文件数据修改
 const saveEdit = () => {
+    let currentFile2 = folderContent.find((v: any) => v.path === currentFile.path)
     Object.keys(currentFileEdit).forEach((key) => {
-        currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
+        if (currentFile[key]) {
+            // 修改选中列表中的当前项
+            currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
+            // 修改展示文件列表中的当前项
+            currentFile2[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
+        }
     })
     window.fsApi.writeFile(`${currentFile.path}/fileData.json`, JSON.stringify(currentFile, null, 4), (err: any) => {
         if (err) {

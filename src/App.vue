@@ -61,19 +61,6 @@ const selectFilePath = computed(() => {
     return arr.join('/')
 })
 
-const currentPreview = computed(() => {
-    if (currentFile.value.name) {
-        return currentFile.value
-    }
-    if (selectFilePath.value && selectFiles[selectFilePath.value]) {
-        return selectFiles[selectFilePath.value]
-    } else if (selectFilePath.value && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
-        return generalModes[selectFilePath.value][0]
-    } else {
-        return currentFolder
-    }
-})
-
 // const filterFileType = computed(() => {
 //     return Object.keys(fileType) || []
 // })
@@ -81,7 +68,7 @@ const isModeType = computed(() => {
     return currentFileEdit.type === 'mode' || currentFileEdit.type === 'modes' || currentFileEdit.type === 'generalMode'
 })
 const isModeType2 = computed(() => {
-    return currentPreview.value.type === 'mode' || currentPreview.value.type === 'modes'
+    return currentFile.value.type === 'mode' || currentFile.value.type === 'modes'
 })
 
 // methods
@@ -206,7 +193,7 @@ const fileGoBack = (item: any) => {
 // 设置文件夹内容
 const setFiles = (item: any) => {
     currentFolder = item
-    currentFile.value = currentPreview.value
+    changeCurrentFile()
     let files = getContent(item.path)
     files.sort((a: any, b: any) => {
         if (a.type === 'mode') {
@@ -250,6 +237,27 @@ const setFiles = (item: any) => {
     folderContent = files
 }
 
+const changeCurrentFile = () => {
+    // 切换文件夹的时候当前选中项会变成从选中列表中取出来的，编辑后不会更新展示列表中的当前项，需要做特殊处理
+    if (selectFilePath.value && selectFiles[selectFilePath.value]) {
+        // 通用mode比modes文件夹回显优先级高的判断
+        // if (selectFiles[selectFilePath.value].type === 'modes' && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
+        //     currentFile.value = generalModes[selectFilePath.value][0]
+        // } else {
+            currentFile.value = selectFiles[selectFilePath.value]
+        // }
+    } else if (selectFilePath.value && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
+        currentFile.value = generalModes[selectFilePath.value][0]
+    } else {
+        currentFile.value = currentFolder
+    }
+}
+
+const clearSelectFile = () => {
+    currentFile.value = {}
+    changeCurrentFile()
+}
+
 // 选中文件夹
 const selectFile = (item: any) => {
     currentClick = item
@@ -263,7 +271,7 @@ const selectFile = (item: any) => {
                     setCurrentFile(item)
                 } else {
                     generalModes[selectFilePath.value].splice(index, 1)
-                    currentFile.value = {}
+                    clearSelectFile()
                 }
             } else {
                 generalModes[selectFilePath.value] = [item]
@@ -273,7 +281,7 @@ const selectFile = (item: any) => {
             if (selectFiles?.[selectFilePath.value]) {
                 if (selectFiles[selectFilePath.value].path === item.path) {
                     selectFiles[selectFilePath.value] = null
-                    currentFile.value = {}
+                    clearSelectFile()
                     // 取消选中的是mods文件夹，下面的mod也要取消选中
                     if (item.type === 'modes') {
                         Object.keys(selectFiles).forEach((key) => {
@@ -303,9 +311,6 @@ const selectFile = (item: any) => {
 // 设置当前选中文件数据
 const setCurrentFile = (item: any) => {
     currentFile.value = item
-    Object.keys(item).forEach((key) => {
-        currentFileEdit[key] = JSON.parse(JSON.stringify(item[key]))
-    })
 }
 
 // 打开modes文件夹
@@ -347,13 +352,6 @@ const filterImgPath = (path: string) => {
 
 // 显示编辑弹窗
 const showEditDialog = () => {
-    if (selectFilePath.value && selectFiles[selectFilePath.value]) {
-        currentFile.value = currentPreview.value
-    } else if (selectFilePath.value && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
-        currentFile.value = currentPreview.value
-    } else {
-        currentFile.value = currentFolder
-    }
     Object.keys(currentFile.value).forEach((key) => {
         currentFileEdit[key] = JSON.parse(JSON.stringify(currentFile.value[key]))
     })
@@ -362,6 +360,9 @@ const showEditDialog = () => {
 
 // 关闭编辑弹窗
 const closeEdit = () => {
+    Object.keys(currentFileEdit).forEach((key) => {
+        currentFileEdit[key] = ''
+    })
     editShow.value = false
 }
 
@@ -420,8 +421,8 @@ const application = async () => {
     await deleteAllFilesInFolder(modesPath.value)
     console.debug('selectFiles', selectFiles)
     console.debug('generalModes', generalModes)
-    window.localStorage.setItem('selectFiles',JSON.stringify(selectFiles))
-    window.localStorage.setItem('generalModes',JSON.stringify(generalModes))
+    window.localStorage.setItem('selectFiles', JSON.stringify(selectFiles))
+    window.localStorage.setItem('generalModes', JSON.stringify(generalModes))
     Object.keys(selectFiles).forEach((key) => {
         if (selectFiles[key]) {
             if (selectFiles[key] && selectFiles[key].type === 'mode') {
@@ -509,7 +510,7 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
                         <div
                             class="file-list-item"
                             v-for="(item, i) in folderContent"
-                            :key="i + item.cover"
+                            :key="i"
                             :class="{
                                 border_folder: item.type === 'folder',
                                 border_file: item.type === 'file',
@@ -539,36 +540,36 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
                 <div v-if="folderContent.length === 0">暂无文件</div>
             </div>
             <div class="edit nodrag">
-                <div class="edit-title">{{ currentPreview.name }}</div>
-                <div class="edit-cover" v-if="currentPreview.cover" :style="{ 'background-image': `url(${filterImgPath(currentPreview.cover)})` }"></div>
+                <div class="edit-title">{{ currentFile.name }}</div>
+                <div class="edit-cover" v-if="currentFile.cover" :style="{ 'background-image': `url(${filterImgPath(currentFile.cover)})` }"></div>
                 <div class="edit-form">
                     <div class="edit-form-label">文件夹类型</div>
-                    <div class="edit-form-item edit-type">{{ fileType[currentPreview.type] }}</div>
-                    <div class="edit-form-label">{{ currentPreview.type !== 'folder' ? 'MODE描述' : '文件夹描述' }}</div>
-                    <div class="edit-form-item">{{ currentPreview.desc }}</div>
+                    <div class="edit-form-item edit-type">{{ fileType[currentFile.type] }}</div>
+                    <div class="edit-form-label">{{ currentFile.type !== 'folder' ? 'MODE描述' : '文件夹描述' }}</div>
+                    <div class="edit-form-item">{{ currentFile.desc }}</div>
                     <div class="edit-form-label" v-if="isModeType2">MODE来源URL</div>
-                    <div class="edit-form-item" v-if="isModeType2">{{ currentPreview.url }}</div>
+                    <div class="edit-form-item" v-if="isModeType2">{{ currentFile.url }}</div>
                     <div class="edit-form-label" v-if="isModeType2">MODE评分</div>
-                    <div class="edit-form-item" v-if="isModeType2">{{ currentPreview.score }}</div>
-                    <div class="edit-form-label" v-if="isModeType2 && currentPreview.keys && currentPreview.keys.length">快捷键</div>
+                    <div class="edit-form-item" v-if="isModeType2">{{ currentFile.score }}</div>
+                    <div class="edit-form-label" v-if="isModeType2 && currentFile.keys && currentFile.keys.length">快捷键</div>
                     <template v-if="isModeType2">
-                        <div class="edit-form-item edit-form-item_key" v-for="(key, keyIndex) in currentPreview.keys" :key="keyIndex">
+                        <div class="edit-form-item edit-form-item_key" v-for="(key, keyIndex) in currentFile.keys" :key="keyIndex">
                             <div class="edit-form-item_key-name">{{ key[0] }}</div>
                             <div class="edit-form-item_key-val">{{ key[1] }}</div>
                         </div>
                     </template>
                     <div class="edit-btns">
                         <div class="edit-btn" @click="showEditDialog">编辑</div>
-                        <div class="edit-btn" v-if="currentPreview.type === 'modes' && currentPreview.path !== currentFolder.path" @click.stop="openModesFolder">打开</div>
+                        <div class="edit-btn" v-if="currentFile.type === 'modes' && currentFile.path !== currentFolder.path" @click.stop="openModesFolder">打开</div>
                     </div>
-                    <!-- <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentPreview, null, 4) }}</pre> -->
+                    <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentFile, null, 4) }}</pre>
                 </div>
             </div>
         </div>
         <div class="footer">
             <div class="footer-application nodrag" @click.stop="application">应用</div>
         </div>
-        <EditDialog :editShow="editShow" :currentFileEdit="currentFileEdit" :isModeType="isModeType" :currentFile="currentFile" @closeEdit="closeEdit"></EditDialog>
+        <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :isModeType="isModeType" :currentFile="currentFile" @closeEdit="closeEdit"></EditDialog>
     </div>
 </template>
 
