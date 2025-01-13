@@ -328,9 +328,9 @@ const filterActiveFile = (item: any) => {
 // 过滤背景图路径
 const filterImgPath = (path: string) => {
     if (path) {
-        // return encodeURI(`file:///${path.split('\\').join('/')}`)
+        return encodeURI(`file:///${path.split('\\').join('/')}`)
         // return encodeURI(`${path.split('\\').join('/')}`)
-        return `${path.split('\\').join('/')}`
+        // return `${path.split('\\').join('/')}`
     }
     return ''
 }
