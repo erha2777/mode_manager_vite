@@ -29,3 +29,7 @@ input {
 .nodrag {
   -webkit-app-region: no-drag;
 }
+
+.no-select {
+  user-select: none;
+}

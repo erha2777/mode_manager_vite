@@ -4,6 +4,7 @@ import { computed, reactive, ref } from 'vue'
 // import path from 'path'
 // import fs from 'fs'
 import EditDialog from './components/EditDialog/index.vue'
+import SettingDialog from './components/SettingDialog/index.vue'
 
 const fileType: any = {
     folder: '文件夹',
@@ -244,7 +245,7 @@ const changeCurrentFile = () => {
         // if (selectFiles[selectFilePath.value].type === 'modes' && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
         //     currentFile.value = generalModes[selectFilePath.value][0]
         // } else {
-            currentFile.value = selectFiles[selectFilePath.value]
+        currentFile.value = selectFiles[selectFilePath.value]
         // }
     } else if (selectFilePath.value && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
         currentFile.value = generalModes[selectFilePath.value][0]
@@ -382,40 +383,7 @@ const closeEdit = () => {
 //         print()
 //     })
 // }
-// 切换目录
-const changeFolder = async () => {
-    window.dialogApi
-        .showOpenDialog({ properties: ['openDirectory'] })
-        .then((res: any) => {
-            let file = res.filePaths[0].split('\\').join('/')
-            config.path = file
-            rootPath.value = file
-            const data = JSON.stringify(config, null, 4)
-            window.fsApi.writeFile('config.json', data, 'utf-8', (err: any) => {
-                if (err) throw err
-                console.log('文件已被保存')
-                print()
-            })
-        })
-        .catch(() => {})
-}
-// 切换modes文件夹
-const changeModesFolder = () => {
-    window.dialogApi
-        .showOpenDialog({ properties: ['openDirectory'] })
-        .then((res: any) => {
-            let file = res.filePaths[0].split('\\').join('/')
-            console.debug(res, res.filePaths, file)
-            config.modesPath = file
-            modesPath.value = file
-            const data = JSON.stringify(config, null, 4)
-            window.fsApi.writeFile('config.json', data, 'utf-8', (err: any) => {
-                if (err) throw err
-                console.log('文件已被保存')
-            })
-        })
-        .catch(() => {})
-}
+
 // 应用
 const application = async () => {
     await deleteAllFilesInFolder(modesPath.value)
@@ -470,6 +438,25 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
         console.error('删除文件出错:', err)
     }
 }
+
+// 设置弹窗--start
+const settingShow = ref(false)
+const showSetting = () => {
+    settingShow.value = true
+}
+const closeSetting = () => {
+    settingShow.value = false
+}
+// 切换存放mode的文件夹路径
+const changeModesFolder = (file: string) => {
+    rootPath.value = file
+    print()
+}
+// 切换mode加载器载入mode的文件夹路径
+const changeModesLoadFolder = (file: string) => {
+    modesPath.value = file
+}
+// 设置弹窗--end
 </script>
 
 <template>
@@ -480,10 +467,7 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
                 We are using Node.js <span id="node-version"></span>, Chromium <span id="chrome-version"></span>, and Electron <span id="electron-version"></span>.
             </div>
             <div class="header__right">
-                <span>{{ rootPath }}</span>
-                <div class="header__right-item nodrag" @click="changeFolder">切换目录</div>
-                <span>{{ modesPath }}</span>
-                <div class="header__right-item nodrag" @click="changeModesFolder">切换modes目录</div>
+                <div class="header__right-item nodrag" @click.stop="showSetting">设置</div>
                 <!-- <button @click="addFolder">新建文件夹</button>
                         <div>
                             <input type="text" v-model="folderName" placeholder="请输入文件夹名字" />
@@ -569,6 +553,7 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
         <div class="footer">
             <div class="footer-application nodrag" @click.stop="application">应用</div>
         </div>
+        <SettingDialog :show.sync="settingShow" :config="config" @close="closeSetting" @changeModesFolder="changeModesFolder" @changeModesLoadFolder="changeModesLoadFolder"></SettingDialog>
         <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :isModeType="isModeType" :currentFile="currentFile" @closeEdit="closeEdit"></EditDialog>
     </div>
 </template>
