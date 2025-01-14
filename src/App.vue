@@ -29,6 +29,7 @@ let currentFileEdit: any = reactive({
     name: '',
     path: '',
     desc: '',
+    score: 0,
     keys: [],
     url: '',
 }) // 用来编辑的文件数据

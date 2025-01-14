@@ -22,6 +22,7 @@ const { editShow, currentFileEdit, currentFile, isModeType, folderContent } = de
                 name: '',
                 path: '',
                 desc: '',
+                score: 0,
                 keys: [],
                 url: '',
             }
@@ -37,6 +38,7 @@ const { editShow, currentFileEdit, currentFile, isModeType, folderContent } = de
                 name: '',
                 path: '',
                 desc: '',
+                score: 0,
                 keys: [],
                 url: '',
             }
@@ -130,7 +132,7 @@ const openFolder = () => {
 const saveEdit = () => {
     let currentFile2 = folderContent.find((v: any) => v.path === currentFile.path)
     Object.keys(currentFileEdit).forEach((key) => {
-        if (currentFile[key]) {
+        if (currentFile[key] !== undefined) {
             // 修改选中列表中的当前项
             currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
             // 修改展示文件列表中的当前项
