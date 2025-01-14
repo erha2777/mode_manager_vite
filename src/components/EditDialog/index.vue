@@ -11,7 +11,7 @@ const fileType: any = {
     firstFolder: '一级目录',
     generalMode: '通用mode',
 }
-const { editShow, currentFileEdit, currentFile, isModeType, folderContent } = defineProps({
+const { editShow, currentFileEdit, currentFile, isModeType } = defineProps({
     editShow: Boolean,
     currentFileEdit: {
         type: Object,
@@ -44,16 +44,12 @@ const { editShow, currentFileEdit, currentFile, isModeType, folderContent } = de
             }
         },
     },
-    folderContent: {
-        type: Object,
-        default: () => [],
-    },
 })
 
 let addKeyShow: any = ref(false) // 显示快捷键弹窗
 let currentFileEditKeys: any = reactive([]) // 编辑中的快捷键
 
-const emit = defineEmits(['closeEdit'])
+const emit = defineEmits(['closeEdit','confirmEdit'])
 // 关闭编辑弹窗
 const closeEdit = () => {
     emit('closeEdit')
@@ -130,13 +126,10 @@ const openFolder = () => {
 }
 // 保存文件数据修改
 const saveEdit = () => {
-    let currentFile2 = folderContent.find((v: any) => v.path === currentFile.path)
     Object.keys(currentFileEdit).forEach((key) => {
         if (currentFile[key] !== undefined) {
             // 修改选中列表中的当前项
             currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
-            // 修改展示文件列表中的当前项
-            currentFile2[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
         }
     })
     window.fsApi.writeFile(`${currentFile.path}/fileData.json`, JSON.stringify(currentFile, null, 4), (err: any) => {
@@ -144,7 +137,7 @@ const saveEdit = () => {
             return console.error(err)
         }
         console.log('文件已修改')
-        emit('closeEdit')
+        emit('confirmEdit')
     })
 }
 

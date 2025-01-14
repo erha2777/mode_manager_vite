@@ -34,7 +34,6 @@ let currentFileEdit: any = reactive({
     url: '',
 }) // 用来编辑的文件数据
 let config: any = reactive({})
-let editShow: any = ref(false) // 显示编辑弹窗
 let selectFiles: any = reactive([]) // 选中的文件
 let preFolder: any = reactive([]) // 上级目录
 let generalModes: any = reactive({}) // 通用mode
@@ -352,21 +351,28 @@ const filterImgPath = (path: string) => {
 //     return fileType[type]
 // }
 
-// 显示编辑弹窗
+// 编辑弹窗相关 -- start
+let editShow: any = ref(false)
 const showEditDialog = () => {
     Object.keys(currentFile.value).forEach((key) => {
         currentFileEdit[key] = JSON.parse(JSON.stringify(currentFile.value[key]))
     })
     editShow.value = true
 }
-
-// 关闭编辑弹窗
+// 关闭弹窗
 const closeEdit = () => {
     Object.keys(currentFileEdit).forEach((key) => {
         currentFileEdit[key] = ''
     })
     editShow.value = false
 }
+// 确认修改
+const confirmEdit = () => {
+    // 更新当前文件列表，重新排序
+    setFiles(currentFolder)
+    closeEdit()
+}
+// 编辑弹窗相关 -- end
 
 // // 创建文件数据
 // const createFileData = (fileName: string, jsonData: any) => {
@@ -555,7 +561,7 @@ const changeModesLoadFolder = (file: string) => {
             <div class="footer-application nodrag" @click.stop="application">应用</div>
         </div>
         <SettingDialog :show.sync="settingShow" :config="config" @close="closeSetting" @changeModesFolder="changeModesFolder" @changeModesLoadFolder="changeModesLoadFolder"></SettingDialog>
-        <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :isModeType="isModeType" :currentFile="currentFile" @closeEdit="closeEdit"></EditDialog>
+        <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :isModeType="isModeType" :currentFile="currentFile" @closeEdit="closeEdit" @confirmEdit="confirmEdit"></EditDialog>
     </div>
 </template>
 
