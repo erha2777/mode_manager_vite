@@ -69,7 +69,8 @@ const createWindow = () => {
     // 2. 窗口 最大化、恢复
     ipcMain.on('window-max', function () {
         if (mainWindow.isMaximized()) { // 为true表示窗口已最大化
-            mainWindow.restore();// 将窗口恢复为之前的状态.
+            // mainWindow.restore(); // 将窗口恢复为之前的状态.
+            mainWindow.unmaximize();
         } else {
             mainWindow.maximize();
         }

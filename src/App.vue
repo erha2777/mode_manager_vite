@@ -424,10 +424,7 @@ const createLink = async (item: any) => {
         console.error('创建软链接出错:', err)
     }
 }
-// 关闭应用
-const closeWin = () => {
-    window.windowApi.close()
-}
+
 // 删除文件夹里面的软链接
 const deleteAllFilesInFolder = async (folderPath: string) => {
     try {
@@ -464,6 +461,22 @@ const changeModesLoadFolder = (file: string) => {
     modesPath.value = file
 }
 // 设置弹窗--end
+
+// 窗口相关--start
+/**
+ * 关闭窗口
+ */
+const closeWin = () => {
+    window.windowApi.close()
+}
+const isFullScreen = ref(false)
+// 切换全屏
+const changeFullScreen = () => {
+    window.windowApi.changeFullScreen()
+    isFullScreen.value = !isFullScreen.value
+}
+// 窗口相关--end
+
 </script>
 
 <template>
@@ -474,7 +487,16 @@ const changeModesLoadFolder = (file: string) => {
                 We are using Node.js <span id="node-version"></span>, Chromium <span id="chrome-version"></span>, and Electron <span id="electron-version"></span>.
             </div>
             <div class="header__right">
-                <div class="header__right-item nodrag" @click.stop="showSetting">设置</div>
+                <div class="header__right-item nodrag" @click.stop="changeFullScreen">
+                    <span class="iconfont icon-zuidahua" :class="{'icon-zuidahua':!isFullScreen,'icon-zuixiaohua':isFullScreen}"></span>
+                </div>
+                <!-- <div class="header__right-item nodrag">
+                    <span class="iconfont icon-zuixiaohua"></span>
+                </div> -->
+                <div class="header__right-item nodrag"  @click.stop="showSetting">
+                    <span class="iconfont icon-shezhi"></span>
+                </div>
+                <!-- <div class="header__right-item nodrag" >设置</div> -->
                 <!-- <button @click="addFolder">新建文件夹</button>
                         <div>
                             <input type="text" v-model="folderName" placeholder="请输入文件夹名字" />

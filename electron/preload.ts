@@ -89,6 +89,9 @@ const exposedWindowMethods = {
     close: () => {
         ipcRenderer.send('window-close')
     },
+    changeFullScreen: () => {
+        ipcRenderer.send('window-max')
+    },
 }
 contextBridge.exposeInMainWorld('windowApi', exposedWindowMethods);
 
