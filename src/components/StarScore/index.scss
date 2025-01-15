@@ -1,0 +1,23 @@
+.star-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &-item {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 5px;
+        cursor: pointer;
+        &:last-child {
+            margin-right: 0;
+        }
+        .icon-star {
+            color: var(--star-color);
+        }
+        .icon-star-full {
+            color: var(--star-active-color);
+        }
+    }
+}

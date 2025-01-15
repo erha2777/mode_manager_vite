@@ -5,6 +5,7 @@ import { computed, reactive, ref } from 'vue'
 // import fs from 'fs'
 import EditDialog from './components/EditDialog/index.vue'
 import SettingDialog from './components/SettingDialog/index.vue'
+import StarScore from './components/StarScore/index.vue'
 
 const fileType: any = {
     folder: '文件夹',
@@ -526,7 +527,7 @@ const minimize = () => {
                     >
                 </div>
                 <div class="file-container">
-                    <div class="file-list">
+                    <div class="file-list" v-if="folderContent.length">
                         <div
                             class="file-list-item"
                             v-for="(item, i) in folderContent"
@@ -556,8 +557,8 @@ const minimize = () => {
                             </div>
                         </div>
                     </div>
+                    <div class="file-empty" v-if="folderContent.length === 0">暂无文件</div>
                 </div>
-                <div v-if="folderContent.length === 0">暂无文件</div>
             </div>
             <div class="edit nodrag">
                 <div class="edit-title">{{ currentFile.name }}</div>
@@ -570,7 +571,9 @@ const minimize = () => {
                     <div class="edit-form-label" v-if="isModeType2">MODE来源URL</div>
                     <div class="edit-form-item" v-if="isModeType2">{{ currentFile.url }}</div>
                     <div class="edit-form-label" v-if="isModeType2">MODE评分</div>
-                    <div class="edit-form-item" v-if="isModeType2">{{ currentFile.score }}</div>
+                    <div class="edit-form-item" v-if="isModeType2">
+                        <StarScore :model-value="currentFile.score"></StarScore>
+                    </div>
                     <div class="edit-form-label" v-if="isModeType2 && currentFile.keys && currentFile.keys.length">快捷键</div>
                     <template v-if="isModeType2">
                         <div class="edit-form-item edit-form-item_key" v-for="(key, keyIndex) in currentFile.keys" :key="keyIndex">

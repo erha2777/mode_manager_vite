@@ -1,7 +1,7 @@
 <!-- EditDialog -->
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-
+import StarScore from '../StarScore/index.vue'
 const fileType: any = {
     folder: '文件夹',
     // 'file': '文件',
@@ -127,10 +127,8 @@ const openFolder = () => {
 // 保存文件数据修改
 const saveEdit = () => {
     Object.keys(currentFileEdit).forEach((key) => {
-        if (currentFile[key] !== undefined) {
-            // 修改选中列表中的当前项
-            currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
-        }
+        // 修改选中列表中的当前项
+        currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]))
     })
     window.fsApi.writeFile(`${currentFile.path}/fileData.json`, JSON.stringify(currentFile, null, 4), (err: any) => {
         if (err) {
@@ -188,8 +186,8 @@ const changeType = (type: string) => {
                     </div>
                     <div class="dialog__body-form-item" v-if="isModeType">
                         <div class="dialog__body-form-item-label">MODE评分</div>
-                        <div class="dialog__body-form-item-operate">
-                            <input class="dialog__body-form-item-input" v-model="currentFileEdit.score" type="number" :min="0" :max="100" />
+                        <div class="dialog__body-form-item-right">
+                            <StarScore v-model="currentFileEdit.score"></StarScore>
                         </div>
                     </div>
                     <div class="dialog__body-form-item" v-if="currentFileEdit.type === 'mode'">
