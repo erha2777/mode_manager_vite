@@ -90,7 +90,10 @@ const exposedWindowMethods = {
         ipcRenderer.send('window-close')
     },
     changeFullScreen: () => {
-        ipcRenderer.send('window-max')
+        ipcRenderer.send('window-change-max')
+    },
+    minimize: () => {
+        ipcRenderer.send('window-min')
     },
 }
 contextBridge.exposeInMainWorld('windowApi', exposedWindowMethods);

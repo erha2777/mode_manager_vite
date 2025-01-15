@@ -470,30 +470,37 @@ const closeWin = () => {
     window.windowApi.close()
 }
 const isFullScreen = ref(false)
-// 切换全屏
+/**
+ * 切换全屏
+ */
 const changeFullScreen = () => {
     window.windowApi.changeFullScreen()
     isFullScreen.value = !isFullScreen.value
 }
+/**
+ * 最小化
+ */
+const minimize = () => {
+    window.windowApi.minimize()
+}
 // 窗口相关--end
-
 </script>
 
 <template>
     <div class="container drag">
         <div class="header">
             <div class="header__left">
-                <div class="header__left-close nodrag" @click.stop="closeWin"><span class="iconfont icon-guanbi"></span></div>
+                <div class="header__left-close nodrag" @click.stop="closeWin" title="关闭"><span class="iconfont icon-guanbi"></span></div>
                 We are using Node.js <span id="node-version"></span>, Chromium <span id="chrome-version"></span>, and Electron <span id="electron-version"></span>.
             </div>
             <div class="header__right">
-                <div class="header__right-item nodrag" @click.stop="changeFullScreen">
-                    <span class="iconfont icon-zuidahua" :class="{'icon-zuidahua':!isFullScreen,'icon-zuixiaohua':isFullScreen}"></span>
+                <div class="header__right-item min nodrag" @click.stop="minimize" title="最小化">
+                    <span class="iconfont icon-zuixiaohua1"></span>
                 </div>
-                <!-- <div class="header__right-item nodrag">
-                    <span class="iconfont icon-zuixiaohua"></span>
-                </div> -->
-                <div class="header__right-item nodrag"  @click.stop="showSetting">
+                <div class="header__right-item nodrag" @click.stop="changeFullScreen" :title="!isFullScreen ? '最大化' : '还原'">
+                    <span class="iconfont icon-zuidahua" :class="{ 'icon-zuidahua': !isFullScreen, 'icon-zuixiaohua': isFullScreen }"></span>
+                </div>
+                <div class="header__right-item nodrag" @click.stop="showSetting" title="设置">
                     <span class="iconfont icon-shezhi"></span>
                 </div>
                 <!-- <div class="header__right-item nodrag" >设置</div> -->
@@ -583,7 +590,15 @@ const changeFullScreen = () => {
             <div class="footer-application nodrag" @click.stop="application">应用</div>
         </div>
         <SettingDialog :show.sync="settingShow" :config="config" @close="closeSetting" @changeModesFolder="changeModesFolder" @changeModesLoadFolder="changeModesLoadFolder"></SettingDialog>
-        <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :isModeType="isModeType" :currentFile="currentFile" @closeEdit="closeEdit" @confirmEdit="confirmEdit"></EditDialog>
+        <EditDialog
+            :editShow="editShow"
+            :folderContent="folderContent"
+            :currentFileEdit="currentFileEdit"
+            :isModeType="isModeType"
+            :currentFile="currentFile"
+            @closeEdit="closeEdit"
+            @confirmEdit="confirmEdit"
+        ></EditDialog>
     </div>
 </template>
 
