@@ -63,14 +63,17 @@ const selectFilePath = computed(() => {
     return arr.join('/')
 })
 
-// const filterFileType = computed(() => {
-//     return Object.keys(fileType) || []
-// })
 const isModeType = computed(() => {
-    return currentFileEdit.type === 'mode' || currentFileEdit.type === 'modes' || currentFileEdit.type === 'generalMode'
+    return currentFile.value.type === 'mode' || currentFile.value.type === 'modes' || currentFile.value.type === 'generalMode'
 })
-const isModeType2 = computed(() => {
-    return currentFile.value.type === 'mode' || currentFile.value.type === 'modes'
+const previewUrlShow = computed(() => {
+    return currentFile.value.type !== 'firstFolder' && currentFile.value.type !== 'folder' && currentFile.value.url
+})
+const previewDescShow = computed(() => {
+    return currentFile.value.desc
+})
+const previewKeysShow = computed(() => {
+    return isModeType.value && currentFile.value.keys && currentFile.value.keys.length > 0
 })
 
 // methods
@@ -193,9 +196,12 @@ const fileGoBack = (item: any) => {
 }
 
 // 设置文件夹内容
-const setFiles = (item: any) => {
-    currentFolder = item
-    changeCurrentFile()
+const setFiles = (item: any, sortFlag?: boolean) => {
+    // sortFlag为true表示仅排序
+    if (!sortFlag) {
+        currentFolder = item
+        changeCurrentFile()
+    }
     let files = getContent(item.path)
     files.sort((a: any, b: any) => {
         if (a.type === 'mode') {
@@ -370,7 +376,7 @@ const closeEdit = () => {
 // 确认修改
 const confirmEdit = () => {
     // 更新当前文件列表，重新排序
-    setFiles(currentFolder)
+    setFiles(currentFolder, true)
     closeEdit()
 }
 // 编辑弹窗相关 -- end
@@ -488,7 +494,31 @@ const minimize = () => {
  * 打开系统文件夹
  */
 const openSpecificPath = () => {
-    window.windowApi.openSpecificPath(currentFile.value.path)
+    if (currentFile.value.path) {
+        window.windowApi
+            .openSpecificPath(currentFile.value.path)
+            .then((res: any) => {
+                console.log(`已成功打开文件管理器中的路径: ${currentFile.value.path}`, res)
+            })
+            .catch((err: any) => {
+                console.error(`打开文件管理器失败: ${err}`)
+            })
+    }
+}
+/**
+ * 打开网页链接
+ */
+const openWebsite = () => {
+    if (currentFile.value.url) {
+        window.windowApi
+            .openWebsite(currentFile.value.url)
+            .then((res: any) => {
+                console.log(`成功打开网站: ${currentFile.value.url}`, res)
+            })
+            .catch((err: any) => {
+                console.error(`打开网站失败: ${err}`)
+            })
+    }
 }
 // 窗口相关--end
 </script>
@@ -572,16 +602,21 @@ const openSpecificPath = () => {
                 <div class="edit-form">
                     <div class="edit-form-label">文件夹类型</div>
                     <div class="edit-form-item edit-type">{{ fileType[currentFile.type] }}</div>
-                    <div class="edit-form-label">{{ currentFile.type !== 'folder' ? 'MODE描述' : '文件夹描述' }}</div>
-                    <div class="edit-form-item">{{ currentFile.desc }}</div>
-                    <div class="edit-form-label" v-if="isModeType2">MODE来源URL</div>
-                    <div class="edit-form-item" v-if="isModeType2">{{ currentFile.url }}</div>
-                    <div class="edit-form-label" v-if="isModeType2">MODE评分</div>
-                    <div class="edit-form-item" v-if="isModeType2">
+                    <div class="edit-form-label" v-if="previewDescShow">{{ currentFile.type !== 'folder' ? 'MODE描述' : '文件夹描述' }}</div>
+                    <div class="edit-form-item" v-if="previewDescShow">{{ currentFile.desc }}</div>
+                    <div class="edit-form-label" v-if="previewUrlShow">MODE来源URL</div>
+                    <div class="edit-form-item edit-form-item_url" v-if="previewUrlShow">
+                        {{ currentFile.url }}
+                    </div>
+                    <div class="edit-form-item edit-form-item_open-url" v-if="previewUrlShow" @click.stop="openWebsite">
+                        打开url
+                    </div>
+                    <div class="edit-form-label" v-if="isModeType">MODE评分</div>
+                    <div class="edit-form-item" v-if="isModeType">
                         <StarScore :model-value="currentFile.score"></StarScore>
                     </div>
-                    <div class="edit-form-label" v-if="isModeType2 && currentFile.keys && currentFile.keys.length">快捷键</div>
-                    <template v-if="isModeType2">
+                    <div class="edit-form-label" v-if="previewKeysShow">快捷键</div>
+                    <template v-if="previewKeysShow">
                         <div class="edit-form-item edit-form-item_key" v-for="(key, keyIndex) in currentFile.keys" :key="keyIndex">
                             <div class="edit-form-item_key-name">{{ key[0] }}</div>
                             <div class="edit-form-item_key-val">{{ key[1] }}</div>
@@ -600,15 +635,7 @@ const openSpecificPath = () => {
             <div class="footer-application nodrag" @click.stop="application">应用</div>
         </div>
         <SettingDialog :show.sync="settingShow" :config="config" @close="closeSetting" @changeModesFolder="changeModesFolder" @changeModesLoadFolder="changeModesLoadFolder"></SettingDialog>
-        <EditDialog
-            :editShow="editShow"
-            :folderContent="folderContent"
-            :currentFileEdit="currentFileEdit"
-            :isModeType="isModeType"
-            :currentFile="currentFile"
-            @closeEdit="closeEdit"
-            @confirmEdit="confirmEdit"
-        ></EditDialog>
+        <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :currentFile="currentFile" @closeEdit="closeEdit" @confirmEdit="confirmEdit"></EditDialog>
     </div>
 </template>
 

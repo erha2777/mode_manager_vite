@@ -1,6 +1,6 @@
 <!-- EditDialog -->
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import StarScore from '../StarScore/index.vue'
 const fileType: any = {
     folder: '文件夹',
@@ -11,7 +11,7 @@ const fileType: any = {
     firstFolder: '一级目录',
     generalMode: '通用mode',
 }
-const { editShow, currentFileEdit, currentFile, isModeType } = defineProps({
+const { editShow, currentFileEdit, currentFile } = defineProps({
     editShow: Boolean,
     currentFileEdit: {
         type: Object,
@@ -28,7 +28,6 @@ const { editShow, currentFileEdit, currentFile, isModeType } = defineProps({
             }
         },
     },
-    isModeType: Boolean,
     currentFile: {
         type: Object,
         default: () => {
@@ -46,10 +45,13 @@ const { editShow, currentFileEdit, currentFile, isModeType } = defineProps({
     },
 })
 
+const isModeType = computed(() => {
+    return currentFileEdit.type === 'mode' || currentFileEdit.type === 'modes' || currentFileEdit.type === 'generalMode'
+})
 let addKeyShow: any = ref(false) // 显示快捷键弹窗
 let currentFileEditKeys: any = reactive([]) // 编辑中的快捷键
 
-const emit = defineEmits(['closeEdit','confirmEdit'])
+const emit = defineEmits(['closeEdit', 'confirmEdit'])
 // 关闭编辑弹窗
 const closeEdit = () => {
     emit('closeEdit')

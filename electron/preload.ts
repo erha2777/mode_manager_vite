@@ -96,7 +96,26 @@ const exposedWindowMethods = {
         ipcRenderer.send('window-min')
     },
     openSpecificPath: (path: string) => {
-        ipcRenderer.send('open-specific-path', path)
+        return new Promise((resolve, reject) => {
+            ipcRenderer.send('open-specific-path', path)
+            ipcRenderer.on('open-specific-path-result', (_event, result) => {
+                resolve(result);
+            });
+            ipcRenderer.on('open-specific-path-error', (_event, result) => {
+                reject(result);
+            });
+        });
+    },
+    openWebsite: (path: string) => {
+        return new Promise((resolve, reject) => {
+            ipcRenderer.send('open-website', path)
+            ipcRenderer.on('open-website-result', (_event, result) => {
+                resolve(result);
+            });
+            ipcRenderer.on('open-website-error', (_event, result) => {
+                reject(result);
+            });
+        });
     },
 }
 contextBridge.exposeInMainWorld('windowApi', exposedWindowMethods);

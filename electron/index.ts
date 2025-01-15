@@ -40,8 +40,6 @@ const createWindow = () => {
         }).catch((err) => {
             event.reply('open-dialog-error', err);
         })
-        // const result = await dialog.showOpenDialog(mainWindow, options);
-        // event.reply('open-dialog-result', result);
     });
     ipcMain.on('show-dialog-request', (event, args) => {
         const { dialogType, options } = args;
@@ -82,11 +80,20 @@ const createWindow = () => {
     })
 
     // 监听渲染进程发送的打开文件管理器的请求
-    ipcMain.on('open-specific-path', (_event, path) => {
-        shell.openPath(path).then(() => {
-            console.log(`已成功打开文件管理器中的路径: ${path}`);
+    ipcMain.on('open-specific-path', (event, path) => {
+        shell.openPath(path).then((res) => {
+            event.reply('open-specific-path-result', res);
         }).catch((err) => {
-            console.error(`打开文件管理器失败: ${err}`);
+            event.reply('open-specific-path-error', err);
+        });
+    });
+
+    // 监听渲染进程发送的跳转网站的请求
+    ipcMain.on('open-website', async (event, url) => {
+        shell.openExternal(url).then((res) => {
+            event.reply('open-website-result', res);
+        }).catch((err) => {
+            event.reply('open-website-error', err);
         });
     });
 }
