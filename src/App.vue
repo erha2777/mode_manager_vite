@@ -484,6 +484,12 @@ const changeFullScreen = () => {
 const minimize = () => {
     window.windowApi.minimize()
 }
+/**
+ * 打开系统文件夹
+ */
+const openSpecificPath = () => {
+    window.windowApi.openSpecificPath(currentFile.value.path)
+}
 // 窗口相关--end
 </script>
 
@@ -553,7 +559,7 @@ const minimize = () => {
                             <div class="file-list-item-msg" v-if="item.type !== 'file'">
                                 <div class="file-list-item-name">{{ item.fileName }}</div>
                                 <div class="file-list-item-tag" v-if="item.type !== 'folder'">{{ item.name }}</div>
-                                <div class="file-list-item-desc" v-if="item.type !== 'pic' && item.desc">{{ item.desc }}</div>
+                                <!-- <div class="file-list-item-desc" v-if="item.type !== 'pic' && item.desc">{{ item.desc }}</div> -->
                             </div>
                         </div>
                     </div>
@@ -582,8 +588,9 @@ const minimize = () => {
                         </div>
                     </template>
                     <div class="edit-btns">
-                        <div class="edit-btn" @click="showEditDialog">编辑</div>
-                        <div class="edit-btn" v-if="currentFile.type === 'modes' && currentFile.path !== currentFolder.path" @click.stop="openModesFolder">打开</div>
+                        <div class="edit-btn" @click.stop="showEditDialog">编辑</div>
+                        <div class="edit-btn" @click.stop="openSpecificPath">打开文件夹</div>
+                        <div class="edit-btn" v-if="currentFile.type === 'modes' && currentFile.path !== currentFolder.path" @click.stop="openModesFolder">查看内部MODE</div>
                     </div>
                     <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentFile, null, 4) }}</pre>
                 </div>

@@ -1,6 +1,6 @@
 // electron-main/index.ts
 
-import { app, BrowserWindow, ipcMain, dialog } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
 import path from 'path'
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
@@ -80,6 +80,15 @@ const createWindow = () => {
     ipcMain.on('window-close', function () {
         mainWindow.close();
     })
+
+    // 监听渲染进程发送的打开文件管理器的请求
+    ipcMain.on('open-specific-path', (_event, path) => {
+        shell.openPath(path).then(() => {
+            console.log(`已成功打开文件管理器中的路径: ${path}`);
+        }).catch((err) => {
+            console.error(`打开文件管理器失败: ${err}`);
+        });
+    });
 }
 
 // 这段程序将会在 Electron 结束初始化

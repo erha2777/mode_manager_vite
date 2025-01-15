@@ -95,6 +95,9 @@ const exposedWindowMethods = {
     minimize: () => {
         ipcRenderer.send('window-min')
     },
+    openSpecificPath: (path: string) => {
+        ipcRenderer.send('open-specific-path', path)
+    },
 }
 contextBridge.exposeInMainWorld('windowApi', exposedWindowMethods);
 
