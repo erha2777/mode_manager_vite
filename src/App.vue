@@ -470,7 +470,7 @@ const changeModesLoadFolder = (file: string) => {
     <div class="container drag">
         <div class="header">
             <div class="header__left">
-                <div class="header__left-close nodrag" @click.stop="closeWin">X</div>
+                <div class="header__left-close nodrag" @click.stop="closeWin"><span class="iconfont icon-guanbi"></span></div>
                 We are using Node.js <span id="node-version"></span>, Chromium <span id="chrome-version"></span>, and Electron <span id="electron-version"></span>.
             </div>
             <div class="header__right">
