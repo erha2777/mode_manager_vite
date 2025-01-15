@@ -7,6 +7,18 @@ import fs from "fs";
 console.debug("platform", os.platform());
 // console.debug("contextBridge", contextBridge);
 
+// 将预加载脚本附加到渲染器的时候。预加载脚本在渲染进程加载之前运行，并且可以访问渲染全局变量(例如窗口和文档)和Node.js环境。
+window.addEventListener('DOMContentLoaded', () => {
+    // 打印Electron的版本号和它的依赖到你的网页上。
+    const replaceText = (selector: any, text: any) => {
+        const element = document.getElementById(selector)
+        if (element) element.innerText = text
+    }
+
+    for (const dependency of ['chrome', 'node', 'electron']) {
+        replaceText(`${dependency}-version`, process.versions[dependency])
+    }
+})
 
 contextBridge.exposeInMainWorld('dialogApi', {
     showOpenDialog: (options: any) => {
