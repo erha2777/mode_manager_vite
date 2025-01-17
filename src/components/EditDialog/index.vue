@@ -145,6 +145,22 @@ const saveEdit = () => {
 const changeType = (type: string) => {
     currentFileEdit.type = type
 }
+
+/**
+ * 打开网页链接
+ */
+ const openWebsite = (url:string) => {
+    if (url) {
+        window.windowApi
+            .openWebsite(url)
+            .then((res: any) => {
+                console.log(`成功打开网站: ${url}`, res)
+            })
+            .catch((err: any) => {
+                console.error(`打开网站失败: ${err}`)
+            })
+    }
+}
 </script>
 
 <template>
@@ -182,7 +198,9 @@ const changeType = (type: string) => {
                     <div class="dialog__body-form-item" v-if="isModeType">
                         <div class="dialog__body-form-item-label">MODE来源URL</div>
                         <div class="dialog__body-form-item-operate">
-                            <div class="dialog__body-form-item-btn">↑</div>
+                            <div class="dialog__body-form-item-btn" @click.stop="openWebsite(currentFileEdit.url)">
+                                <span class="iconfont icon-mti-tiaozhuan"></span>
+                            </div>
                             <input class="dialog__body-form-item-input" v-model="currentFileEdit.url" type="text" />
                         </div>
                     </div>

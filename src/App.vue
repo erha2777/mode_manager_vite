@@ -609,7 +609,7 @@ const openWebsite = () => {
                         {{ currentFile.url }}
                     </div>
                     <div class="edit-form-item edit-form-item_open-url" v-if="previewUrlShow" @click.stop="openWebsite">
-                        打开url
+                        打开网站<span class="iconfont icon-mti-tiaozhuan" style="margin-left: 10px;transform: translateY(1px);"></span>
                     </div>
                     <div class="edit-form-label" v-if="isModeType">MODE评分</div>
                     <div class="edit-form-item" v-if="isModeType">
