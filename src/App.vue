@@ -204,6 +204,7 @@ const setFiles = (item: any, sortFlag?: boolean) => {
     }
     let files = getContent(item.path)
     files.sort((a: any, b: any) => {
+        return b.score - a.score;
         if (a.type === 'mode') {
             if (b.type !== 'mode') {
                 return -1
@@ -609,7 +610,7 @@ const openWebsite = () => {
                         {{ currentFile.url }}
                     </div>
                     <div class="edit-form-item edit-form-item_open-url" v-if="previewUrlShow" @click.stop="openWebsite">
-                        打开网站<span class="iconfont icon-mti-tiaozhuan" style="margin-left: 10px;transform: translateY(1px);"></span>
+                        打开网站
                     </div>
                     <div class="edit-form-label" v-if="isModeType">MODE评分</div>
                     <div class="edit-form-item" v-if="isModeType">
@@ -627,7 +628,7 @@ const openWebsite = () => {
                         <div class="edit-btn" @click.stop="openSpecificPath">打开文件夹</div>
                         <div class="edit-btn" v-if="currentFile.type === 'modes' && currentFile.path !== currentFolder.path" @click.stop="openModesFolder">查看内部MODE</div>
                     </div>
-                    <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentFile, null, 4) }}</pre>
+                    <!-- <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentFile, null, 4) }}</pre> -->
                 </div>
             </div>
         </div>

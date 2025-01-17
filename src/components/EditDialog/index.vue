@@ -192,7 +192,7 @@ const changeType = (type: string) => {
                     <div class="dialog__body-form-item" v-if="isModeType || currentFileEdit.type === 'firstFolder'">
                         <div class="dialog__body-form-item-label">{{ `${currentFileEdit.type === 'firstFolder' ? '目录' : currentFileEdit.type === 'mode' ? '角色' : 'mode'}名称` }}</div>
                         <div class="dialog__body-form-item-operate">
-                            <input class="dialog__body-form-item-input" v-model="currentFileEdit.name" type="text" />
+                            <input class="dialog__body-form-item-input" style="text-align: center;" v-model="currentFileEdit.name" type="text" />
                         </div>
                     </div>
                     <div class="dialog__body-form-item" v-if="isModeType">
@@ -201,7 +201,7 @@ const changeType = (type: string) => {
                             <div class="dialog__body-form-item-btn" @click.stop="openWebsite(currentFileEdit.url)">
                                 <span class="iconfont icon-mti-tiaozhuan"></span>
                             </div>
-                            <input class="dialog__body-form-item-input" v-model="currentFileEdit.url" type="text" />
+                            <input class="dialog__body-form-item-input" style="width: 260px;" v-model="currentFileEdit.url" type="text" />
                         </div>
                     </div>
                     <div class="dialog__body-form-item" v-if="isModeType">

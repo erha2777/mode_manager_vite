@@ -60,7 +60,7 @@ const changeModesLoadFolder = () => {
 </script>
 
 <template>
-    <div class="dialog dialog_settings nodrag" v-if="show">
+    <div class="dialog dialog_settings" v-if="show">
         <div class="dialog__mask" @click="closeEdit"></div>
         <div class="dialog__body">
             <div class="dialog_settings-item">
