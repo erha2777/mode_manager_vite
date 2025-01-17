@@ -28,7 +28,7 @@
     },
     "build": {
         "appId": "com.electron.desktop",
-        "productName": "electron",
+        "productName": "mode-manager",
         "asar": true,
         "copyright": "Copyright © 2025 electron",
         "directories": {
@@ -40,12 +40,14 @@
             "./dist-electron"
         ],
         "mac": {
+            "icon": "public/timg.icns",
             "artifactName": "${productName}_${version}.${ext}",
             "target": [
                 "dmg"
             ]
         },
         "win": {
+            "icon": "public/timg2.ico",
             "target": [
                 {
                     "target": "nsis",
