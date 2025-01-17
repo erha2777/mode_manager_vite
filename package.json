@@ -28,7 +28,7 @@
     },
     "build": {
         "appId": "com.electron.desktop",
-        "productName": "mode-manager",
+        "productName": "zzz-mode-manager",
         "asar": true,
         "copyright": "Copyright © 2025 electron",
         "directories": {
@@ -71,7 +71,7 @@
             "uninstallDisplayName": "${productName}${version}",
             "createDesktopShortcut": true,
             "createStartMenuShortcut": true,
-            "shortcutName": "TestApp",
+            "shortcutName": "绝区零mode管理器",
             "deleteAppDataOnUninstall": true,
             "runAfterFinish": true,
             "menuCategory": false
