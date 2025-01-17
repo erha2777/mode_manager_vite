@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4811446 */
-  src: url('iconfont.woff2?t=1736941368423') format('woff2'),
-       url('iconfont.woff?t=1736941368423') format('woff'),
-       url('iconfont.ttf?t=1736941368423') format('truetype');
+  src: url('iconfont.woff2?t=1737106722122') format('woff2'),
+       url('iconfont.woff?t=1737106722122') format('woff'),
+       url('iconfont.ttf?t=1737106722122') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-mti-tiaozhuan:before {
+  content: "\e92b";
 }
 
 .icon-star-full:before {

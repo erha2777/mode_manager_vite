@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "42870414",
+      "name": "mti-跳转",
+      "font_class": "mti-tiaozhuan",
+      "unicode": "e92b",
+      "unicode_decimal": 59691
+    },
+    {
       "icon_id": "18170317",
       "name": "星,星星,星形,半星,实星",
       "font_class": "star-full",
