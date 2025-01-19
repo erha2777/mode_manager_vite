@@ -46,13 +46,16 @@ const init = () => {
         if (err) throw err
         console.log(JSON.parse(data))
         config = JSON.parse(data)
+        let previousPath = window.localStorage.getItem('rootPath') || ''
+        // 路径没变，使用选中缓存
+        if (previousPath === config.path) {
+            let selectFilesVal = window.localStorage.getItem('selectFiles')
+            selectFiles = JSON.parse(selectFilesVal || '{}')
+            let generalModesVal = window.localStorage.getItem('generalModes')
+            generalModes = JSON.parse(generalModesVal || '{}')
+        }
         print()
     })
-
-    let selectFilesVal = window.localStorage.getItem('selectFiles')
-    selectFiles = JSON.parse(selectFilesVal || '{}')
-    let generalModesVal = window.localStorage.getItem('generalModes')
-    generalModes = JSON.parse(generalModesVal || '{}')
 }
 
 init()
@@ -81,9 +84,11 @@ const previewKeysShow = computed(() => {
 const print = async () => {
     const path = config.path
     rootPath.value = path
+    window.localStorage.setItem('rootPath', path) // 用来进行取缓存判断
     modesPath.value = config.modesPath
     const dir = await window.fsApi.readdirSync(path)
 
+    rootFolders.splice(0, rootFolders.length) // 清除上一次的目录数据
     dir.forEach(async (fileName: string) => {
         let filePath = `${path}/${fileName}`
         if (window.fsApi.isDirectory(filePath)) {
@@ -204,7 +209,7 @@ const setFiles = (item: any, sortFlag?: boolean) => {
     }
     let files = getContent(item.path)
     files.sort((a: any, b: any) => {
-        return b.score - a.score;
+        return b.score - a.score
         if (a.type === 'mode') {
             if (b.type !== 'mode') {
                 return -1
