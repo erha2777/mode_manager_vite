@@ -288,12 +288,33 @@
         }
     }
     &-cover {
+        position: relative;
         width: 100%;
         aspect-ratio: 1/1.3;
         overflow: hidden;
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+        &-mask {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            &:hover {
+                opacity: 1;
+            }
+            &-btn {
+                cursor: pointer;
+            }
+        }
     }
     &-name {
         input {
