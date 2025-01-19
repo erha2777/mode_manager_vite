@@ -133,7 +133,7 @@ const openFolder = () => {
                 // 获取选择的文件路径
                 const filePath = result.filePaths[0]
                 console.log('选择的文件路径: ', filePath)
-                currentFileEdit.cover = filePath
+                currentFileEdit.cover = filePath.replace(/\\/g, '/')
                 // 在这里可以对选择的文件进行进一步的操作
             }
         })
