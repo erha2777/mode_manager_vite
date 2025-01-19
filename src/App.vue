@@ -104,10 +104,11 @@ const print = async () => {
             // 检测是否已经生成过数据文件
             if (window.fsApi.existsSync(fileDataPath)) {
                 let data = window.fsApi.readFileSync(fileDataPath, 'utf8')
+                data = JSON.parse(data)
                 // 处理读取移动过后的数据问题
                 data.fileName = fileName
                 data.path = filePath
-                fileData = JSON.parse(data)
+                fileData = data
             } else {
                 fileData.cover = getFolderCover(filePath) || ''
                 window.fsApi.writeFile(fileDataPath, JSON.stringify(fileData, null, 4), (err: any) => {
@@ -155,10 +156,11 @@ const getContent = (path: string) => {
             if (window.fsApi.existsSync(fileDataPath)) {
                 // fileData
                 let data = window.fsApi.readFileSync(fileDataPath, 'utf8')
+                data = JSON.parse(data)
                 // 处理读取移动过后的数据问题
                 data.fileName = fileName
                 data.path = filePath
-                fileData = JSON.parse(data)
+                fileData = data
             } else {
                 fileData.cover = getFolderCover(filePath) || ''
                 window.fsApi.writeFile(fileDataPath, JSON.stringify(fileData, null, 4), (err: any) => {
