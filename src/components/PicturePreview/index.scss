@@ -1,0 +1,45 @@
+.picture-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba($color: #000000, $alpha: 0.7);
+    &__swiper {
+        width: 100vw;
+        height: 100vh;
+        &-item {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &-val {
+                width: 100%;
+                height: 90%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: contain;
+            }
+        }
+
+        :deep(.swiper-pagination-bullet) {
+            background-color: #fff;
+        }
+        :deep(.swiper-button-prev),
+        :deep(.swiper-button-next) {
+            color: #fff;
+        }
+        :deep(.swiper-scrollbar-drag) {
+            background-color: #fff;
+        }
+    }
+    &__close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        cursor: pointer;
+        font-size: 20px;
+        z-index: 2;
+    }
+}

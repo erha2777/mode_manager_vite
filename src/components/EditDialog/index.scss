@@ -284,6 +284,8 @@
                     background-color: rgba(34, 34, 34);
                     margin: 0 3px;
                     border: 1px solid rgba($color: #fff, $alpha: 0.2);
+                    transform-origin: center;
+                    transition: .1s;
                 }
                 &-input {
                     // flex: 1;

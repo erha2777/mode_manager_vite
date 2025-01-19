@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
 import StarScore from '../StarScore/index.vue'
+import PicturePreview from '../PicturePreview/index.vue'
 const fileType: any = {
     folder: '文件夹',
     // 'file': '文件',
@@ -121,6 +122,8 @@ const openFolder = () => {
             title: '在指定文件夹中选择文件',
             // 只允许选择文件
             properties: ['openFile'],
+            // 仅允许选择图片
+            filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'] }],
             // 指定初始打开的文件夹路径，可根据需求修（不支持中文）
             // defaultPath: path.join(__dirname, 'your-folder')
             defaultPath: window.pathApi.normalize(currentFile.path),
@@ -170,6 +173,24 @@ const openWebsite = (url: string) => {
             })
     }
 }
+
+// 大图预览相关--start
+const picturePreviewShow = ref(false)
+const PicturePreviewPath = ref('')
+const picturePreviewClose = () => {
+    picturePreviewShow.value = false
+}
+const showPicturePreview = () => {
+    if (currentFileEdit.cover) {
+        let lastIndex = currentFileEdit.cover.lastIndexOf('/')
+        if (lastIndex !== -1) {
+            let path = currentFileEdit.cover.slice(0, lastIndex)
+            PicturePreviewPath.value = path
+            picturePreviewShow.value = true
+        }
+    }
+}
+// 大图预览相关--end
 </script>
 
 <template>
@@ -189,7 +210,7 @@ const openWebsite = (url: string) => {
                 </div>
                 <div class="dialog__body-content-left" :style="{ 'background-image': `url(${filterImgPath(currentFileEdit.cover)})` }">
                     <div class="dialog__body-content-left-bottom">
-                        <div class="dialog__body-content-left-bottom-preview">预览大图</div>
+                        <div class="dialog__body-content-left-bottom-preview" @click.stop="showPicturePreview">预览大图</div>
                         <div class="dialog__body-content-left-bottom-replace" @click.stop="openFolder">更换图片</div>
                     </div>
                 </div>
@@ -224,7 +245,9 @@ const openWebsite = (url: string) => {
                         <div class="dialog__body-form-item-right">
                             <div class="dialog__body-form-item-key" v-for="(key, keyIndex) in currentFileEdit.keys" :key="keyIndex" :title="key[1]">{{ key[0] }}</div>
                             <div class="dialog__body-form-item-operate dialog__body-form-item-operate_key">
-                                <div class="dialog__body-form-item-btn" @click.stop="changeAddKey">↓</div>
+                                <div class="dialog__body-form-item-btn" :style="{ transform: `rotate(${addKeyShow ? '0deg' : '90deg'})` }" @click.stop="changeAddKey">
+                                    <span class="iconfont icon-down_arrow"></span>
+                                </div>
                             </div>
                         </div>
                         <div class="dialog__body-form-item-keys" v-if="addKeyShow">
@@ -258,6 +281,7 @@ const openWebsite = (url: string) => {
             </div>
         </div>
     </div>
+    <PicturePreview :show="picturePreviewShow" :path="PicturePreviewPath" @close="picturePreviewClose"></PicturePreview>
 </template>
 
 <style lang="scss" scoped>

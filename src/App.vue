@@ -6,6 +6,7 @@ import { computed, reactive, ref } from 'vue'
 import EditDialog from './components/EditDialog/index.vue'
 import SettingDialog from './components/SettingDialog/index.vue'
 import StarScore from './components/StarScore/index.vue'
+import PicturePreview from './components/PicturePreview/index.vue'
 
 const fileType: any = {
     folder: '文件夹',
@@ -527,6 +528,23 @@ const openWebsite = () => {
     }
 }
 // 窗口相关--end
+// 大图预览相关--start
+const picturePreviewShow = ref(false)
+const PicturePreviewPath = ref('')
+const picturePreviewClose = () => {
+    picturePreviewShow.value = false
+}
+const showPicturePreview = (cover:string) => {
+    if (cover) {
+        let lastIndex = cover.lastIndexOf('/')
+        if (lastIndex !== -1) {
+            let path = cover.slice(0, lastIndex)
+            PicturePreviewPath.value = path
+            picturePreviewShow.value = true
+        }
+    }
+}
+// 大图预览相关--end
 </script>
 
 <template>
@@ -604,7 +622,11 @@ const openWebsite = () => {
             </div>
             <div class="edit nodrag">
                 <div class="edit-title">{{ currentFile.name }}</div>
-                <div class="edit-cover" v-if="currentFile.cover" :style="{ 'background-image': `url(${filterImgPath(currentFile.cover)})` }"></div>
+                <div class="edit-cover" v-if="currentFile.cover"  :style="{ 'background-image': `url(${filterImgPath(currentFile.cover)})` }">
+                    <div class="edit-cover-mask">
+                        <div class="edit-cover-mask-btn" @click.stop="showPicturePreview(currentFile.cover)">预览大图</div>
+                    </div>
+                </div>
                 <div class="edit-form">
                     <div class="edit-form-label">文件夹类型</div>
                     <div class="edit-form-item edit-type">{{ fileType[currentFile.type] }}</div>
@@ -642,6 +664,7 @@ const openWebsite = () => {
         </div>
         <SettingDialog :show.sync="settingShow" :config="config" @close="closeSetting" @changeModesFolder="changeModesFolder" @changeModesLoadFolder="changeModesLoadFolder"></SettingDialog>
         <EditDialog :editShow="editShow" :folderContent="folderContent" :currentFileEdit="currentFileEdit" :currentFile="currentFile" @closeEdit="closeEdit" @confirmEdit="confirmEdit"></EditDialog>
+        <PicturePreview :show="picturePreviewShow" :path="PicturePreviewPath" @close="picturePreviewClose"></PicturePreview>
     </div>
 </template>
 

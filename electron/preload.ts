@@ -81,6 +81,9 @@ const exposedPathMethods = {
     join: (...args: any[]) => {
         return path.join(args[0], args[1])
     },
+    extname: (file:string) =>{
+        return path.extname(file)
+    },
 }
 contextBridge.exposeInMainWorld('pathApi', exposedPathMethods);
 
