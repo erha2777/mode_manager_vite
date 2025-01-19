@@ -6,8 +6,7 @@ import { Navigation, Pagination, A11y } from 'swiper/modules'
 // Import Swiper Vue.js components
 import { Swiper, SwiperSlide } from 'swiper/vue'
 // Import Swiper styles
-import 'swiper/css/bundle'
-
+import 'swiper/swiper-bundle.css'
 const { show, path } = defineProps({
     show: {
         type: Boolean,
