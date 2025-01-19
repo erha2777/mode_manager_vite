@@ -203,6 +203,8 @@
                     border-radius: 15px;
                     overflow: hidden;
                     padding: 10px;
+                    max-height: 530px;
+                    overflow-y: auto;
                     &-item {
                         display: flex;
                         align-items: center;
@@ -218,7 +220,7 @@
                             align-items: center;
                             height: 100%;
                             input {
-                                width: 106px;
+                                width: 104px;
                                 height: 100%;
                                 overflow: hidden;
                                 background-color: rgba(34, 34, 34);

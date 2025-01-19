@@ -54,6 +54,7 @@ let currentFileEditKeys: any = reactive([]) // 编辑中的快捷键
 const emit = defineEmits(['closeEdit', 'confirmEdit'])
 // 关闭编辑弹窗
 const closeEdit = () => {
+    closeAddKeys()
     emit('closeEdit')
 }
 // 过滤背景图路径
@@ -79,8 +80,16 @@ const changeAddKey = () => {
         }
         addKeyShow.value = true
     } else {
+        currentFileEditKeys.splice(0, currentFileEditKeys.length)
         addKeyShow.value = false
     }
+}
+/**
+ * 关闭快捷键弹窗
+ */
+const closeAddKeys = () => {
+    currentFileEditKeys.splice(0, currentFileEditKeys.length)
+    addKeyShow.value = false
 }
 // 添加快捷键
 const addKey = (index?: number) => {
@@ -149,7 +158,7 @@ const changeType = (type: string) => {
 /**
  * 打开网页链接
  */
- const openWebsite = (url:string) => {
+const openWebsite = (url: string) => {
     if (url) {
         window.windowApi
             .openWebsite(url)
@@ -165,8 +174,8 @@ const changeType = (type: string) => {
 
 <template>
     <div class="dialog dialog_edit" v-show="editShow">
-        <div class="dialog__mask" @click="closeEdit"></div>
-        <div class="dialog__body">
+        <div class="dialog__mask drag"></div>
+        <div class="dialog__body nodrag">
             <div class="dialog__body-content">
                 <div class="dialog__body-content-title">
                     编辑（
@@ -232,7 +241,7 @@ const changeType = (type: string) => {
                                     <button @click.stop="delKey(keyIndex)">-</button>
                                 </div>
                             </div>
-                            <div class="dialog__body-form-item-keys-item add-key-btns">
+                            <div class="dialog__body-form-item-keys-item add-key-btns nodrag">
                                 <div class="add-key-btns-item" @click.stop="saveKey">保存</div>
                             </div>
                         </div>
@@ -243,7 +252,7 @@ const changeType = (type: string) => {
                     </div>
                 </div>
             </div>
-            <div class="dialog__body-btns">
+            <div class="dialog__body-btns nodrag">
                 <div class="dialog__body-btns-item cancel" @click="closeEdit">取消</div>
                 <div class="dialog__body-btns-item confirm" @click="saveEdit">保存</div>
             </div>
