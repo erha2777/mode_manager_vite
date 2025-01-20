@@ -41,5 +41,8 @@
         cursor: pointer;
         font-size: 20px;
         z-index: 2;
+        &:hover {
+            color: lightskyblue;
+        }
     }
 }
