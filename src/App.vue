@@ -564,7 +564,8 @@ const PicturePreviewPath = ref('');
 const picturePreviewClose = () => {
     picturePreviewShow.value = false;
 };
-const showPicturePreview = (cover: string) => {
+const showPicturePreview = () => {
+    let cover = currentFile.value.cover;
     if (cover) {
         let lastIndex = cover.lastIndexOf('/');
         if (lastIndex !== -1) {
@@ -686,7 +687,7 @@ const showPicturePreview = (cover: string) => {
                         :style="{ 'background-image': `url(${filterImgPath(currentFile.cover)})` }"
                     >
                         <div class="edit-cover-mask">
-                            <div class="edit-cover-mask-btn" @click.stop="showPicturePreview(currentFile.cover)">
+                            <div class="edit-cover-mask-btn" @click.stop="showPicturePreview">
                                 预览大图
                             </div>
                         </div>
