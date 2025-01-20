@@ -31,7 +31,7 @@ const changeModesFolder = async () => {
             const data = JSON.stringify(config, null, 4);
             window.fsApi.writeFile('config.json', data, 'utf-8', (err: any) => {
                 if (err) throw err;
-                console.log('文件已被保存');
+                console.debug(`切换存放mode的文件夹路径成功: ${file}`);
                 emit('changeModesFolder', file);
             });
         })
@@ -46,19 +46,18 @@ const changeModesLoadFolder = () => {
         .showOpenDialog({ properties: ['openDirectory'] })
         .then((res: any) => {
             let file = res.filePaths[0].split('\\').join('/');
-            console.debug(res, res.filePaths, file);
             config.modesPath = file;
             const data = JSON.stringify(config, null, 4);
             window.fsApi.writeFile('config.json', data, 'utf-8', (err: any) => {
                 if (err) throw err;
-                console.log('文件已被保存');
+                console.debug(`切换mode加载器载入mode的文件夹路径成功: ${file}`);
                 emit('changeModesLoadFolder', file);
             });
         })
         .catch(() => {});
 };
 /**
- * 切换mode加载器载入mode的文件夹路径
+ * 切换背景图片路径
  */
 const changeBgImg = () => {
     window.dialogApi
@@ -77,12 +76,12 @@ const changeBgImg = () => {
             if (!result.canceled) {
                 // 获取选择的文件路径
                 const filePath = result.filePaths[0];
-                console.log('选择的文件路径: ', filePath);
                 let bgImg = filePath.replace(/\\/g, '/');
                 config.bgImgPath = bgImg;
                 const data = JSON.stringify(config, null, 4);
                 window.fsApi.writeFile('config.json', data, 'utf-8', (err: any) => {
                     if (err) throw err;
+                    console.debug(`切换背景图片路径成功: ${bgImg}`);
                     emit('changeBgImg', bgImg);
                 });
             }

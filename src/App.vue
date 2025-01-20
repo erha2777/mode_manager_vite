@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, reactive, ref, toRaw } from 'vue';
 // import { ipcRenderer, dialog } from 'electron'
 // import path from 'path'
 // import fs from 'fs'
@@ -50,7 +50,7 @@ const init = () => {
     // 获取全部配置
     window.fsApi.readFile('config.json', 'utf-8', (err: any, data: any) => {
         if (err) throw err;
-        console.log(JSON.parse(data));
+        console.debug('获取config--', JSON.parse(data));
         let configData = JSON.parse(data) || {};
         Object.assign(config, configData);
         bgImgPath.value = configData.bgImgPath;
@@ -64,7 +64,7 @@ const init = () => {
             let generalModesVal = window.localStorage.getItem('generalModes');
             generalModes = JSON.parse(generalModesVal || '{}');
         }
-        if(config.path) {
+        if (config.path) {
             print();
         }
     });
@@ -129,7 +129,7 @@ const print = async () => {
                     if (err) {
                         return console.error(err);
                     }
-                    console.log('文件已创建');
+                    console.debug('一级目录创建fileData.json成功', fileData);
                 });
             }
             rootFolders.push(fileData);
@@ -139,11 +139,9 @@ const print = async () => {
 
 // 获取目录内文件
 const getContent = (path: string) => {
-    console.log(path);
     let flies = window.fsApi.readdirSync(path);
     let flieList: any = [];
     flies.forEach((fileName: string) => {
-        console.debug('getContent--', fileName);
         let filePath = `${path}/${fileName}`;
         let fileDataPath = `${path}/${fileName}/fileData.json`;
         let type = 'folder';
@@ -181,13 +179,13 @@ const getContent = (path: string) => {
                     if (err) {
                         return console.error(err);
                     }
-                    console.log('文件已创建');
+                    console.debug('文件夹创建fileData.json成功', fileData);
                 });
             }
             flieList.push(fileData);
         }
     });
-    console.debug(flieList);
+    console.debug('获取目录内文件--', flieList);
     return flieList;
 };
 
@@ -203,9 +201,11 @@ const getFolderCover = (path: string) => {
     return url;
 };
 
-// 切换文件夹
+/**
+ * 切换当前打开的文件夹
+ */
 const changeContent = (item: any, clear?: boolean) => {
-    console.debug('changeContent', item);
+    console.debug('切换当前打开的文件夹--', toRaw(item));
     if (clear) {
         preFolder.splice(0, preFolder.length);
         preFolder.push(item);
@@ -423,7 +423,7 @@ const confirmEdit = () => {
 // const addFolder = () => {
 //     fs.mkdir(`${config.path}/${folderName}`, (err) => {
 //         if (err) {
-//             console.log(err)
+//             console.debug(err)
 //             if (err.toString().includes('file already exists')) alert('文件名已存在')
 //             else alert(err)
 //         }
@@ -434,8 +434,8 @@ const confirmEdit = () => {
 // 应用
 const application = async () => {
     await deleteAllFilesInFolder(modesPath.value);
-    console.debug('selectFiles', selectFiles);
-    console.debug('generalModes', generalModes);
+    console.debug('选中的文件夹--selectFiles', selectFiles);
+    console.debug('通用mode--generalModes', generalModes);
     window.localStorage.setItem('selectFiles', JSON.stringify(selectFiles));
     window.localStorage.setItem('generalModes', JSON.stringify(generalModes));
     Object.keys(selectFiles).forEach((key) => {
@@ -459,7 +459,7 @@ const application = async () => {
 const createLink = async (item: any) => {
     try {
         await window.fsApi.symlinkSync(item.path, `${modesPath.value}/${item.fileName}`, 'dir');
-        console.log('创建软链接成功');
+        console.debug('创建软链接成功', `${modesPath.value}/${item.fileName}`);
     } catch (err) {
         console.error('创建软链接出错:', err);
     }
@@ -477,7 +477,7 @@ const deleteAllFilesInFolder = async (folderPath: string) => {
                 await window.fsApi.unlinkSync(filePath);
             }
         }
-        console.log('所有文件已删除');
+        console.debug('所有文件已删除');
     } catch (err) {
         console.error('删除文件出错:', err);
     }
@@ -535,7 +535,7 @@ const openSpecificPath = () => {
         window.windowApi
             .openSpecificPath(currentFile.value.path)
             .then((res: any) => {
-                console.log(`已成功打开文件管理器中的路径: ${currentFile.value.path}`, res);
+                console.debug(`已成功打开文件管理器中的路径: ${currentFile.value.path}`, res);
             })
             .catch((err: any) => {
                 console.error(`打开文件管理器失败: ${err}`);
@@ -550,7 +550,7 @@ const openWebsite = () => {
         window.windowApi
             .openWebsite(currentFile.value.url)
             .then((res: any) => {
-                console.log(`成功打开网站: ${currentFile.value.url}`, res);
+                console.debug(`成功打开网站: ${currentFile.value.url}`, res);
             })
             .catch((err: any) => {
                 console.error(`打开网站失败: ${err}`);
