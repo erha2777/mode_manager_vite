@@ -7,6 +7,7 @@ import EditDialog from './components/EditDialog/index.vue';
 import SettingDialog from './components/SettingDialog/index.vue';
 import StarScore from './components/StarScore/index.vue';
 import PicturePreview from './components/PicturePreview/index.vue';
+import FileItem from './components/FileItem/index.vue';
 
 const fileType: any = {
     folder: '文件夹',
@@ -639,42 +640,16 @@ const showPicturePreview = () => {
                     </div>
                     <div class="file-container">
                         <div class="file-list" v-if="folderContent.length">
-                            <div
-                                class="file-list-item"
-                                v-for="(item, i) in folderContent"
-                                :key="i"
+                            <FileItem
                                 :class="{
-                                    border_folder: item.type === 'folder',
-                                    border_file: item.type === 'file',
-                                    border_pic: item.type === 'pic',
-                                    border_mode: item.type !== 'pic' && item.type !== 'file',
-                                    border_modes: item.type === 'modes',
                                     border_active: filterActiveFile(item),
-                                    'file-list-item_img': item.type === 'pic',
-                                    'file-list-item_file': item.type !== 'folder',
                                     'file-list-item_select': currentClick.name === item.name,
                                 }"
                                 @click.stop="selectFile(item)"
-                            >
-                                <div
-                                    class="file-list-item-cover"
-                                    v-if="item.type !== 'file' && item.type !== 'pic'"
-                                    :style="{ 'background-image': `url('${filterImgPath(item.cover)}')` }"
-                                ></div>
-                                <!-- <img class="file-list-item-img" v-if="item.type === 'pic'" :src="item.path" /> -->
-                                <div
-                                    class="file-list-item-cover"
-                                    v-if="item.type === 'pic'"
-                                    :style="{ 'background-image': `url(${filterImgPath(item.path)})` }"
-                                ></div>
-
-                                <div class="file-list-item-name" v-if="item.type === 'file'">{{ item.fileName }}</div>
-                                <div class="file-list-item-msg" v-if="item.type !== 'file'">
-                                    <div class="file-list-item-name">{{ item.fileName }}</div>
-                                    <div class="file-list-item-tag" v-if="item.type !== 'folder'">{{ item.name }}</div>
-                                    <!-- <div class="file-list-item-desc" v-if="item.type !== 'pic' && item.desc">{{ item.desc }}</div> -->
-                                </div>
-                            </div>
+                                v-for="(item, i) in folderContent"
+                                :key="i"
+                                :item="item"
+                            ></FileItem>
                         </div>
                         <div class="file-empty" v-if="folderContent.length === 0">暂无文件</div>
                     </div>
