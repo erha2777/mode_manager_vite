@@ -5,19 +5,9 @@ import { computed, reactive, ref, toRaw } from 'vue';
 // import fs from 'fs'
 import EditDialog from './components/EditDialog/index.vue';
 import SettingDialog from './components/SettingDialog/index.vue';
-import StarScore from './components/StarScore/index.vue';
-import PicturePreview from './components/PicturePreview/index.vue';
 import FileItem from './components/FileItem/index.vue';
+import Preview from './components/Preview/index.vue'
 
-const fileType: any = {
-    folder: '文件夹',
-    // 'file': '文件',
-    // 'pic': '图片',
-    mode: 'mode',
-    modes: 'mode文件夹',
-    firstFolder: '一级目录',
-    generalMode: '通用mode',
-};
 
 let rootPath: any = ref(''); // 存放mode的源文件夹路径
 let modesPath: any = ref(''); // mode加载器加载mode的文件夹路径
@@ -79,22 +69,6 @@ const selectFilePath = computed(() => {
     return arr.join('/');
 });
 
-const isModeType = computed(() => {
-    return (
-        currentFile.value.type === 'mode' ||
-        currentFile.value.type === 'modes' ||
-        currentFile.value.type === 'generalMode'
-    );
-});
-const previewUrlShow = computed(() => {
-    return currentFile.value.type !== 'firstFolder' && currentFile.value.type !== 'folder' && currentFile.value.url;
-});
-const previewDescShow = computed(() => {
-    return currentFile.value.desc;
-});
-const previewKeysShow = computed(() => {
-    return isModeType.value && currentFile.value.keys && currentFile.value.keys.length > 0;
-});
 
 // methods
 // 读取根目录文件
@@ -528,55 +502,7 @@ const changeFullScreen = () => {
 const minimize = () => {
     window.windowApi.minimize();
 };
-/**
- * 打开系统文件夹
- */
-const openSpecificPath = () => {
-    if (currentFile.value.path) {
-        window.windowApi
-            .openSpecificPath(currentFile.value.path)
-            .then((res: any) => {
-                console.debug(`已成功打开文件管理器中的路径: ${currentFile.value.path}`, res);
-            })
-            .catch((err: any) => {
-                console.error(`打开文件管理器失败: ${err}`);
-            });
-    }
-};
-/**
- * 打开网页链接
- */
-const openWebsite = () => {
-    if (currentFile.value.url) {
-        window.windowApi
-            .openWebsite(currentFile.value.url)
-            .then((res: any) => {
-                console.debug(`成功打开网站: ${currentFile.value.url}`, res);
-            })
-            .catch((err: any) => {
-                console.error(`打开网站失败: ${err}`);
-            });
-    }
-};
 // 窗口相关--end
-// 大图预览相关--start
-const picturePreviewShow = ref(false);
-const PicturePreviewPath = ref('');
-const picturePreviewClose = () => {
-    picturePreviewShow.value = false;
-};
-const showPicturePreview = () => {
-    let cover = currentFile.value.cover;
-    if (cover) {
-        let lastIndex = cover.lastIndexOf('/');
-        if (lastIndex !== -1) {
-            let path = cover.slice(0, lastIndex);
-            PicturePreviewPath.value = path;
-            picturePreviewShow.value = true;
-        }
-    }
-};
-// 大图预览相关--end
 </script>
 
 <template>
@@ -654,70 +580,13 @@ const showPicturePreview = () => {
                         <div class="file-empty" v-if="folderContent.length === 0">暂无文件</div>
                     </div>
                 </div>
-                <div class="edit nodrag">
-                    <div class="edit-title">{{ currentFile.name }}</div>
-                    <div
-                        class="edit-cover"
-                        v-if="currentFile.cover"
-                        :style="{ 'background-image': `url(${filterImgPath(currentFile.cover)})` }"
-                    >
-                        <div class="edit-cover-mask">
-                            <div class="edit-cover-mask-btn" @click.stop="showPicturePreview">
-                                预览大图
-                            </div>
-                        </div>
-                    </div>
-                    <div class="edit-form">
-                        <div class="edit-form-label">文件夹类型</div>
-                        <div class="edit-form-item edit-type">{{ fileType[currentFile.type] }}</div>
-                        <div class="edit-form-label" v-if="previewDescShow">
-                            {{ currentFile.type !== 'folder' ? 'MODE描述' : '文件夹描述' }}
-                        </div>
-                        <div class="edit-form-item" v-if="previewDescShow">{{ currentFile.desc }}</div>
-                        <div class="edit-form-label" v-if="previewUrlShow">MODE来源URL</div>
-                        <div class="edit-form-item edit-form-item_url" v-if="previewUrlShow">
-                            {{ currentFile.url }}
-                        </div>
-                        <div
-                            class="edit-form-item edit-form-item_open-url"
-                            v-if="previewUrlShow"
-                            @click.stop="openWebsite"
-                        >
-                            打开网站
-                        </div>
-                        <div class="edit-form-label" v-if="isModeType">MODE评分</div>
-                        <div class="edit-form-item" v-if="isModeType">
-                            <StarScore :model-value="currentFile.score"></StarScore>
-                        </div>
-                        <div class="edit-form-label" v-if="previewKeysShow">快捷键</div>
-                        <template v-if="previewKeysShow">
-                            <div
-                                class="edit-form-item edit-form-item_key"
-                                v-for="(key, keyIndex) in currentFile.keys"
-                                :key="keyIndex"
-                            >
-                                <div class="edit-form-item_key-name">{{ key[0] }}</div>
-                                <div class="edit-form-item_key-val">{{ key[1] }}</div>
-                            </div>
-                        </template>
-                        <div class="edit-btns">
-                            <div class="edit-btn" @click.stop="showEditDialog">编辑</div>
-                            <div class="edit-btn" @click.stop="openSpecificPath">打开文件夹</div>
-                            <div
-                                class="edit-btn"
-                                v-if="currentFile.type === 'modes' && currentFile.path !== currentFolder.path"
-                                @click.stop="openModesFolder"
-                            >
-                                查看内部MODE
-                            </div>
-                        </div>
-                        <!-- <pre style="white-space: pre-wrap; overflow: hidden; word-wrap: break-word;">{{ JSON.stringify(currentFile, null, 4) }}</pre> -->
-                    </div>
-                </div>
+                
+                <Preview :currentFile="currentFile" :currentFolder="currentFolder" @showEditDialog="showEditDialog" @openModesFolder="openModesFolder"></Preview>
             </div>
             <div class="footer">
                 <div class="footer-application nodrag" @click.stop="application">应用</div>
             </div>
+            <!-- 设置弹窗 -->
             <SettingDialog
                 :show.sync="settingShow"
                 :config="config"
@@ -726,6 +595,8 @@ const showPicturePreview = () => {
                 @changeModesLoadFolder="changeModesLoadFolder"
                 @changeBgImg="changeBgImg"
             ></SettingDialog>
+
+            <!-- 编辑弹窗 -->
             <EditDialog
                 :editShow="editShow"
                 :folderContent="folderContent"
@@ -734,11 +605,6 @@ const showPicturePreview = () => {
                 @closeEdit="closeEdit"
                 @confirmEdit="confirmEdit"
             ></EditDialog>
-            <PicturePreview
-                :show="picturePreviewShow"
-                :path="PicturePreviewPath"
-                @close="picturePreviewClose"
-            ></PicturePreview>
         </div>
     </div>
 </template>
