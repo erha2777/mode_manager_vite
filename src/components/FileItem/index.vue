@@ -36,7 +36,7 @@ const filterImgPath = (path: string) => {
             'file-item_mode': item.type !== 'pic' && item.type !== 'file',
             'file-item_modes': item.type === 'modes',
             'file-item_img': item.type === 'pic',
-            'file-item__select': selected,
+            'file-item_select': selected,
         }"
     >
         <div
