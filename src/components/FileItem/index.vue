@@ -9,6 +9,10 @@ const { item } = defineProps({
             return {};
         },
     },
+    selected: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 // 过滤背景图路径
@@ -26,13 +30,13 @@ const filterImgPath = (path: string) => {
     <div
         class="file-item"
         :class="{
-            border_folder: item.type === 'folder',
-            border_file: item.type === 'file',
-            border_pic: item.type === 'pic',
-            border_mode: item.type !== 'pic' && item.type !== 'file',
-            border_modes: item.type === 'modes',
-            'file-list-item_img': item.type === 'pic',
-            'file-list-item_file': item.type !== 'folder',
+            'file-item_folder': item.type === 'folder',
+            'file-item_file': item.type === 'file',
+            'file-item_pic': item.type === 'pic',
+            'file-item_mode': item.type !== 'pic' && item.type !== 'file',
+            'file-item_modes': item.type === 'modes',
+            'file-item_img': item.type === 'pic',
+            'file-item__select': selected,
         }"
     >
         <div
@@ -53,6 +57,7 @@ const filterImgPath = (path: string) => {
             <div class="file-item-tag" v-if="item.type !== 'folder'">{{ item.name }}</div>
             <!-- <div class="file-item-desc" v-if="item.type !== 'pic' && item.desc">{{ item.desc }}</div> -->
         </div>
+        <span v-if="selected" class="file-item__checked iconfont icon-gouxuan"></span>
     </div>
 </template>
 

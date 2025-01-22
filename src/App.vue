@@ -568,9 +568,9 @@ const minimize = () => {
                         <div class="file-list" v-if="folderContent.length">
                             <FileItem
                                 :class="{
-                                    border_active: filterActiveFile(item),
-                                    'file-list-item_select': currentClick.name === item.name,
+                                    'file-item_active': currentClick.name === item.name,
                                 }"
+                                :selected="filterActiveFile(item)"
                                 @click.stop="selectFile(item)"
                                 v-for="(item, i) in folderContent"
                                 :key="i"
