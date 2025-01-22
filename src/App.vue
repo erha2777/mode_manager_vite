@@ -35,7 +35,7 @@ let config: any = reactive({
 let selectFiles: any = reactive([]); // 选中的文件
 let preFolder: any = reactive([]); // 上级目录
 let generalModes: any = reactive({}); // 通用mode
-let currentClick: any = reactive({}); // 通用mode
+let currentClick: any = reactive({}); // 当前点击的文件夹
 
 const init = () => {
     // 获取全部配置
@@ -185,6 +185,7 @@ const changeContent = (item: any, clear?: boolean) => {
         preFolder.splice(0, preFolder.length);
         preFolder.push(item);
         currentFile.value = {};
+        currentClick = {};
     }
     setFiles(item);
 };
@@ -324,18 +325,23 @@ const selectFile = (item: any) => {
     }
 };
 
-// 设置当前选中文件数据
+// 设置当前选择文件数据
 const setCurrentFile = (item: any) => {
     currentFile.value = item;
 };
 
 // 打开modes文件夹
 const openModesFolder = () => {
-    preFolder.push(currentFile.value);
-    changeContent(currentFile.value);
+    if(currentClick.name) {
+        preFolder.push(currentClick);
+        changeContent(currentClick);
+    } else {
+        preFolder.push(currentFile.value);
+        changeContent(currentFile.value);
+    }
 };
 
-// 过滤选中
+// 过滤选择
 const filterActiveFile = (item: any) => {
     if (item.type === 'generalMode') {
         if (selectFilePath && generalModes[selectFilePath.value] && generalModes[selectFilePath.value]?.length > 0) {
@@ -369,9 +375,15 @@ const filterImgPath = (path: string) => {
 // 编辑弹窗相关 -- start
 let editShow: any = ref(false);
 const showEditDialog = () => {
-    Object.keys(currentFile.value).forEach((key) => {
-        currentFileEdit[key] = JSON.parse(JSON.stringify(currentFile.value[key]));
-    });
+    if(currentClick?.name) {
+        Object.keys(currentClick).forEach((key) => {
+            currentFileEdit[key] = JSON.parse(JSON.stringify(currentClick[key]));
+        });
+    } else {
+        Object.keys(currentFile.value).forEach((key) => {
+            currentFileEdit[key] = JSON.parse(JSON.stringify(currentFile.value[key]));
+        });
+    }
     editShow.value = true;
 };
 // 关闭弹窗
@@ -568,7 +580,7 @@ const minimize = () => {
                         <div class="file-list" v-if="folderContent.length">
                             <FileItem
                                 :class="{
-                                    'file-item_active': currentClick.name === item.name,
+                                    'file-item_active': currentClick.path === item.path,
                                 }"
                                 :selected="filterActiveFile(item)"
                                 @click.stop="selectFile(item)"
@@ -581,7 +593,7 @@ const minimize = () => {
                     </div>
                 </div>
                 
-                <Preview :currentFile="currentFile" :currentFolder="currentFolder" @showEditDialog="showEditDialog" @openModesFolder="openModesFolder"></Preview>
+                <Preview :currentFile="currentClick.name ? currentClick : currentFile" :currentFolder="currentFolder" @showEditDialog="showEditDialog" @openModesFolder="openModesFolder"></Preview>
             </div>
             <div class="footer">
                 <div class="footer-application nodrag" @click.stop="application">应用</div>
