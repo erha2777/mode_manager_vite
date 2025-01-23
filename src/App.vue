@@ -35,7 +35,7 @@ let config: any = reactive({
 let selectFiles: any = reactive([]); // 选中的文件
 let preFolder: any = reactive([]); // 上级目录
 let generalModes: any = reactive({}); // 通用mode
-let currentClick: any = reactive({}); // 当前点击的文件夹
+let currentClick: any = ref({}); // 当前点击的文件夹
 
 const init = () => {
     // 获取全部配置
@@ -185,7 +185,7 @@ const changeContent = (item: any, clear?: boolean) => {
         preFolder.splice(0, preFolder.length);
         preFolder.push(item);
         currentFile.value = {};
-        currentClick = {};
+        currentClick.value = {};
     }
     setFiles(item);
 };
@@ -196,6 +196,7 @@ const fileGoBack = (item: any) => {
     if (index !== -1) {
         preFolder.splice(index + 1, preFolder.length);
     }
+    currentClick.value = {};
     setFiles(item);
 };
 
@@ -277,7 +278,7 @@ const clearSelectFile = () => {
 
 // 选中文件夹
 const selectFile = (item: any) => {
-    currentClick = item;
+    currentClick.value = item;
     if (item.type !== 'file' && item.type !== 'pic') {
         // mode切换
         if (item.type === 'generalMode') {
@@ -332,9 +333,9 @@ const setCurrentFile = (item: any) => {
 
 // 打开modes文件夹
 const openModesFolder = () => {
-    if(currentClick.name) {
-        preFolder.push(currentClick);
-        changeContent(currentClick);
+    if(currentClick.value?.name) {
+        preFolder.push(currentClick.value);
+        changeContent(currentClick.value);
     } else {
         preFolder.push(currentFile.value);
         changeContent(currentFile.value);
@@ -375,9 +376,9 @@ const filterImgPath = (path: string) => {
 // 编辑弹窗相关 -- start
 let editShow: any = ref(false);
 const showEditDialog = () => {
-    if(currentClick?.name) {
-        Object.keys(currentClick).forEach((key) => {
-            currentFileEdit[key] = JSON.parse(JSON.stringify(currentClick[key]));
+    if(currentClick.value?.name) {
+        Object.keys(currentClick.value).forEach((key) => {
+            currentFileEdit[key] = JSON.parse(JSON.stringify(currentClick.value[key]));
         });
     } else {
         Object.keys(currentFile.value).forEach((key) => {
