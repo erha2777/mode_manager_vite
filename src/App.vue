@@ -32,7 +32,7 @@ let config: any = reactive({
     modesPath: '',
     bgImgPath: '',
 });
-let selectFiles: any = reactive([]); // 选中的文件
+let selectFiles: any = reactive({}); // 选中的文件
 let preFolder: any = reactive([]); // 上级目录
 let generalModes: any = reactive({}); // 通用mode
 let currentClick: any = ref({}); // 当前点击的文件夹
