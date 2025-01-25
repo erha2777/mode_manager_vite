@@ -299,7 +299,7 @@ const showPicturePreview = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="dialog__body-form-item-keys" v-if="addKeyShow">
+                        <div class="dialog__body-form-item-keys nodrag" v-if="addKeyShow">
                             <!-- <div class="dialog__body-form-item-keys-item add" v-if="!(currentFileEdit.keys.length)" @click="addKey">
                                             +
                                         </div> -->
@@ -317,7 +317,7 @@ const showPicturePreview = () => {
                                     <button @click.stop="delKey(keyIndex)">-</button>
                                 </div>
                             </div>
-                            <div class="dialog__body-form-item-keys-item add-key-btns nodrag">
+                            <div class="dialog__body-form-item-keys-item add-key-btns">
                                 <div class="add-key-btns-item" @click.stop="saveKey">保存</div>
                             </div>
                         </div>
