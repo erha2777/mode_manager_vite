@@ -559,7 +559,7 @@ const minimize = () => {
                     <div class="folder-list">
                         <div
                             class="folder-item"
-                            :class="{ 'folder-item_active': currentFolder.name === item.name }"
+                            :class="{ 'folder-item_active': currentFolder.path.indexOf(item.path) === 0}"
                             v-for="(item, i) in rootFolders"
                             :key="i"
                             @click="changeContent(item, true)"
