@@ -129,7 +129,7 @@ const openSpecificPath = () => {
             <div class="preview-form-label" v-if="currentFile.desc">
                 {{ currentFile.type !== 'folder' ? 'MODE描述' : '文件夹描述' }}
             </div>
-            <div class="preview-form-item" v-if="currentFile.desc">{{ currentFile.desc }}</div>
+            <pre class="preview-form-item" v-if="currentFile.desc" style="white-space: pre-wrap;font-size: 16px;font-family:'微软雅黑';">{{ currentFile.desc }}</pre>
             <div class="preview-form-label" v-if="previewUrlShow">MODE来源URL</div>
             <div class="preview-form-item preview-form-item_url" v-if="previewUrlShow">
                 {{ currentFile.url }}

@@ -10,6 +10,8 @@
         padding: 10px;
         // margin-bottom: 10px;
         border-bottom: 1px solid rgb(48, 48, 48);
+        word-break: break-all;
+        line-break: anywhere;
     }
     &-form {
         padding: 10px 20px;
@@ -26,6 +28,8 @@
             align-items: center;
             padding: 8px 15px;
             border: 1px solid rgba($color: #fff, $alpha: 0.2);
+            word-break: break-all;
+            line-break: anywhere;
             min-height: 40px;
             &_key {
                 margin-bottom: 10px;
