@@ -1,9 +1,10 @@
 .preview {
     width: 300px;
+    min-width: 300px;
     overflow: hidden;
     overflow-y: auto;
     border-radius: 15px;
-    margin: 0 10px;
+    margin-right: 10px;
     border: 4px solid rgb(48, 48, 48);
     background-color: rgba(10, 10, 10, 0.7);
     &-title {

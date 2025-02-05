@@ -37,6 +37,7 @@ const createWindow = () => {
         width: 1280,
         height: 720,
         // minWidth: 1280,
+        minWidth: 560,
         // minHeight: 720,
         // 无边框窗口
         frame: false,

@@ -96,7 +96,7 @@
     width: 200px;
     box-sizing: border-box;
     overflow: hidden;
-    margin: 0 10px;
+    margin-left: 10px;
     border-radius: 15px;
     border: 4px solid rgb(48, 48, 48);
     background-color: rgba(10, 10, 10, 0.7);
@@ -127,6 +127,10 @@
         }
         &-name {
             text-align: center;
+            overflow: hidden;
+            white-space: wrap;
+            word-break: break-all;
+            line-break: anywhere;
         }
         &_active {
             border-color: #d8ab18;
@@ -135,7 +139,9 @@
 }
 
 .file {
+    margin: 0 10px;
     flex: 1;
+    min-width: 400px;
     overflow: hidden;
     border-radius: 15px;
     border: 4px solid rgb(48, 48, 48);
