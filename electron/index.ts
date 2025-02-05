@@ -36,8 +36,8 @@ const createWindow = () => {
     const mainWindow = new BrowserWindow({
         width: 1280,
         height: 720,
-        minWidth: 1280,
-        minHeight: 720,
+        // minWidth: 1280,
+        // minHeight: 720,
         // 无边框窗口
         frame: false,
         // 是否自动隐藏菜单栏(按alt显示 设置了无边框不可使用) 

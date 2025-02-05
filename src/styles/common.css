@@ -13,6 +13,7 @@ input {
 /* 整体滚动条 */
 ::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
   background-color: #f5f5f5;
 }
 
