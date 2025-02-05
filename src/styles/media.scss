@@ -1,0 +1,13 @@
+// Bootstrap 断点
+// 断点	规格	屏幕尺寸大小
+// 超小(X-Small)	无	<576px
+// 小(Small)	sm	≥576px
+// 中(Medium)	md	≥768px
+// 大(Large)	lg	≥992px
+// 超大(Extra large)	xl	≥1200px
+// 超大型(Extra extra large)	xxl	≥1400px
+@media screen and (max-width: 1280px) {
+    .file-item-msg {
+        opacity: 0;
+    }
+}
