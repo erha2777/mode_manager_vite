@@ -5,4 +5,5 @@ interface Window {
   pathApi?: any;
   windowApi?: any;
   imgApi?: any;
+  notificationApi?: any;
 }

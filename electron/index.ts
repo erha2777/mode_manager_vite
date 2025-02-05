@@ -1,7 +1,37 @@
 // electron-main/index.ts
 
-import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell, Notification } from 'electron'
 import path from 'path'
+
+// 显示系统通知
+const showSystemNotification = (data?: {
+    title?: string,
+    body?: string,
+    silent?: boolean,
+    icon?: string,
+}, callback?: () => void) => {
+    // 检查系统是否支持通知
+    if (!Notification.isSupported()) {
+        console.log('系统不支持通知')
+        return
+    }
+
+    // 创建通知
+    const notification = new Notification({
+        title: data?.title || '新消息提醒',    // 通知标题
+        body: data?.body || '您有一条未读消息', // 通知内容
+        silent: data?.silent,  // 是否静音
+        icon: data?.icon // 通知图标（可选）
+    })
+
+    // 点击通知时的回调
+    if (callback) {
+        notification.on('click', callback)
+    }
+
+    // 显示通知
+    notification.show()
+}
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
         width: 1280,
@@ -96,6 +126,11 @@ const createWindow = () => {
             event.reply('open-website-error', err);
         });
     });
+
+    // 创建系统通知
+    ipcMain.on('show-system-notification', (_event, params) => {
+        showSystemNotification(params.data, params.callback)
+    })
 }
 
 // 这段程序将会在 Electron 结束初始化

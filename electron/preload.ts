@@ -81,7 +81,7 @@ const exposedPathMethods = {
     join: (...args: any[]) => {
         return path.join(args[0], args[1])
     },
-    extname: (file:string) =>{
+    extname: (file: string) => {
         return path.extname(file)
     },
 }
@@ -131,3 +131,15 @@ const exposedImgMethods = {
     },
 }
 contextBridge.exposeInMainWorld('imgApi', exposedImgMethods);
+
+const notificationMethods = {
+    show: (data?: {
+        title?: string,
+        body?: string,
+        silent?: boolean,
+        icon?: string,
+    }, callback?: () => void) => {
+        ipcRenderer.send('show-system-notification', { data, callback })
+    }
+}
+contextBridge.exposeInMainWorld('notificationApi', notificationMethods);

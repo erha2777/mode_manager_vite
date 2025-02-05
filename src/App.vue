@@ -454,6 +454,10 @@ const application = async () => {
             });
         }
     });
+    window.notificationApi.show({
+        title:'mode应用',
+        body:'应用mode成功'
+    })
 };
 // 创建软链接
 const createLink = async (item: any) => {
