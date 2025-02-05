@@ -6,13 +6,13 @@
 // 大(Large)	lg	≥992px
 // 超大(Extra large)	xl	≥1200px
 // 超大型(Extra extra large)	xxl	≥1400px
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: 1279px) {
     .file-item-msg {
         opacity: 0;
     }
 }
 
-@media screen and (max-width: 940px) {
+@media screen and (max-width: 939px) {
     .preview {
         display: none;
     }
