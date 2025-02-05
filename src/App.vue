@@ -145,6 +145,9 @@ const getContent = (path: string) => {
                 let data = window.fsApi.readFileSync(fileDataPath, 'utf8');
                 data = JSON.parse(data);
                 // 处理读取移动过后的数据问题
+                if(data.cover && !data.cover.includes(filePath)) {
+                    data.cover = resetCoverPath(data.cover,filePath,fileName);
+                }
                 data.fileName = fileName;
                 data.path = filePath;
                 fileData = data;
@@ -175,6 +178,13 @@ const getFolderCover = (path: string) => {
     });
     return url;
 };
+
+// 修复封面路径
+const resetCoverPath = (oldPath:string,path:string,fileName: string) => {
+    let index1  = oldPath.indexOf(fileName);
+    let index2  = path.indexOf(fileName);
+    return oldPath.replace(oldPath.slice(0,index1),path.slice(0,index2));
+}
 
 /**
  * 切换当前打开的文件夹
