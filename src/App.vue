@@ -307,6 +307,12 @@ const selectFile = (item: any) => {
                                 selectFiles[key] = null;
                             }
                         });
+                        // 清空里面的通用mode
+                        Object.keys(generalModes).forEach((key) => {
+                            if (key.indexOf(selectFilePath.value + '/') === 0) {
+                                generalModes[key].splice(0,generalModes[key].length);
+                            }
+                        });
                     }
                 } else {
                     selectFiles[selectFilePath.value] = item;
@@ -315,6 +321,12 @@ const selectFile = (item: any) => {
                     Object.keys(selectFiles).forEach((key) => {
                         if (key.indexOf(selectFilePath.value + '/') === 0) {
                             selectFiles[key] = null;
+                        }
+                    });
+                    // 清空通用mode
+                    Object.keys(generalModes).forEach((key) => {
+                        if (key.indexOf(selectFilePath.value + '/') === 0) {
+                            generalModes[key].splice(0,generalModes[key].length);
                         }
                     });
                 }
