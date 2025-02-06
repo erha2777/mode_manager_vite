@@ -360,6 +360,9 @@ const setCurrentFile = (item: any) => {
 
 // 打开modes文件夹
 const openModesFolder = () => {
+    // 打开modes文件夹时选中
+    selectFiles[selectFilePath.value] = currentClick.value;
+    setCurrentFile(currentClick.value);
     if(currentClick.value?.name) {
         preFolder.push(currentClick.value);
         changeContent(currentClick.value);
