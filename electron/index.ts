@@ -39,6 +39,7 @@ const createWindow = () => {
         // minWidth: 1280,
         minWidth: 560,
         // minHeight: 720,
+        minHeight: 50,
         // 无边框窗口
         frame: false,
         // 是否自动隐藏菜单栏(按alt显示 设置了无边框不可使用) 
