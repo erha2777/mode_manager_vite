@@ -1,6 +1,6 @@
 <!-- Preview -->
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, ref } from 'vue';
+import { computed, ref } from 'vue';
 import PicturePreview from '../PicturePreview/index.vue';
 import StarScore from '../StarScore/index.vue';
 

@@ -1,6 +1,6 @@
 <!-- SettingDialog -->
 <script setup lang="ts">
-import { defineEmits, defineProps, ref } from 'vue';
+import { ref } from 'vue';
 
 const { step, maxNum, modelValue, selectColor } = defineProps({
     step: {

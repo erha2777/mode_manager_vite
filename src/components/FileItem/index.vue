@@ -1,7 +1,5 @@
 <!-- FileItem -->
 <script setup lang="ts">
-import { defineProps } from 'vue';
-
 const { item } = defineProps({
     item: {
         type: Object,

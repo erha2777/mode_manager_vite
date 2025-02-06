@@ -1,6 +1,6 @@
 <!-- PicturePreview -->
 <script setup lang="ts">
-import { defineEmits, defineProps, reactive, watch } from 'vue';
+import { reactive, watch } from 'vue';
 // import Swiper core and required modules
 import { Navigation, Pagination, A11y } from 'swiper/modules';
 // Import Swiper Vue.js components

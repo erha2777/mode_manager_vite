@@ -1,7 +1,5 @@
 <!-- SettingDialog -->
 <script setup lang="ts">
-import { defineEmits, defineProps } from 'vue';
-
 const { show, config } = defineProps({
     show: {
         type: Boolean,
