@@ -12,7 +12,7 @@ const fileType: any = {
     firstFolder: '一级目录',
     generalMode: '通用mode',
 };
-const { editShow, currentFileEdit, currentFile } = defineProps({
+const { editShow, currentFileEdit, currentFile, currentClick } = defineProps({
     editShow: Boolean,
     currentFileEdit: {
         type: Object,
@@ -32,18 +32,15 @@ const { editShow, currentFileEdit, currentFile } = defineProps({
     currentFile: {
         type: Object,
         default: () => {
-            return {
-                type: '',
-                fileName: '',
-                name: '',
-                path: '',
-                desc: '',
-                score: 0,
-                keys: [],
-                url: '',
-            };
+            return {};
         },
     },
+    currentClick: {
+        type: Object,
+        default: () => {
+            return {};
+        },
+    }
 });
 
 const isModeType = computed(() => {
@@ -128,7 +125,7 @@ const openFolder = () => {
             filters: [{ name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif', 'bmp'] }],
             // 指定初始打开的文件夹路径，可根据需求修（不支持中文）
             // defaultPath: path.join(__dirname, 'your-folder')
-            defaultPath: window.pathApi.normalize(currentFile.path),
+            defaultPath: window.pathApi.normalize(currentClick.path || currentFile.path),
         })
         .then((result: any) => {
             if (!result.canceled) {
@@ -142,11 +139,12 @@ const openFolder = () => {
 };
 // 保存文件数据修改
 const saveEdit = () => {
+    let obj = currentClick.path ? currentClick : currentFile;
     Object.keys(currentFileEdit).forEach((key) => {
         // 修改选中列表中的当前项
-        currentFile[key] = JSON.parse(JSON.stringify(currentFileEdit[key]));
+        obj[key] = JSON.parse(JSON.stringify(currentFileEdit[key]));
     });
-    window.fsApi.writeFile(`${currentFile.path}/fileData.json`, JSON.stringify(currentFile, null, 4), (err: any) => {
+    window.fsApi.writeFile(`${obj.path}/fileData.json`, JSON.stringify(obj, null, 4), (err: any) => {
         if (err) {
             return console.error(err);
         }

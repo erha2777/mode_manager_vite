@@ -647,7 +647,8 @@ const minimize = () => {
             <EditDialog
                 :editShow="editShow"
                 :currentFileEdit="currentFileEdit"
-                :currentFile="currentClick.name ? currentClick : currentFile"
+                :currentFile="currentFile"
+                :currentClick="currentClick"
                 @closeEdit="closeEdit"
                 @confirmEdit="confirmEdit"
             ></EditDialog>
