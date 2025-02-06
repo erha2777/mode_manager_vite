@@ -262,6 +262,8 @@ const setFiles = (item: any, sortFlag?: boolean) => {
 };
 
 const changeCurrentFile = () => {
+    currentFile.value = currentFolder;
+    return;
     // 切换文件夹的时候当前选中项会变成从选中列表中取出来的，编辑后不会更新展示列表中的当前项，需要做特殊处理
     if (selectFilePath.value && selectFiles[selectFilePath.value]) {
         // 通用mode比modes文件夹回显优先级高的判断
