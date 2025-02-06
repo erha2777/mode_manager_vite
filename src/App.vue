@@ -638,7 +638,6 @@ const minimize = () => {
             <!-- 编辑弹窗 -->
             <EditDialog
                 :editShow="editShow"
-                :folderContent="folderContent"
                 :currentFileEdit="currentFileEdit"
                 :currentFile="currentFile"
                 @closeEdit="closeEdit"
