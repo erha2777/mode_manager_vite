@@ -55,6 +55,10 @@
             color: #fff;
             border: 1px solid #fff;
             cursor: pointer;
+            &:hover {
+                color: lightskyblue;
+                border: 1px solid lightskyblue;
+            }
         }
     }
     &__right {
@@ -80,6 +84,9 @@
             &.min {
                 align-items: flex-end;
                 padding-bottom: 1px;
+            }
+            &:hover {
+                color: lightskyblue;
             }
         }
     }
@@ -133,7 +140,13 @@
             line-break: anywhere;
         }
         &_active {
-            border-color: #d8ab18;
+            color: lightskyblue;
+            border-color: lightskyblue;
+        }
+
+        &:hover {
+            color: lightskyblue;
+            border: 2px solid lightskyblue;
         }
     }
 }

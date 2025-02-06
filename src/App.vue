@@ -288,7 +288,10 @@ const clearSelectFile = () => {
 
 // 选中文件夹
 const selectFile = (item: any) => {
-    currentClick.value = item;
+    if(!currentClick.value.path || currentClick.value.path !== item.path) {
+        currentClick.value = item;
+        return;
+    }
     if (item.type !== 'file' && item.type !== 'pic') {
         // mode切换
         if (item.type === 'generalMode') {
