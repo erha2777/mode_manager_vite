@@ -276,7 +276,7 @@ const showPicturePreview = () => {
                             <StarScore v-model="currentFileEdit.score"></StarScore>
                         </div>
                     </div>
-                    <div class="dialog__body-form-item" v-if="currentFileEdit.type === 'mode'">
+                    <div class="dialog__body-form-item" v-if="isModeType">
                         <div class="dialog__body-form-item-label">快捷键</div>
                         <div class="dialog__body-form-item-right">
                             <div

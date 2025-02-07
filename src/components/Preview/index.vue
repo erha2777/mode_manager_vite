@@ -111,12 +111,13 @@ const openSpecificPath = () => {
 
 <template>
     <div class="preview nodrag">
-        <div class="preview-title">{{ currentFile.name }}</div>
+        <div class="preview-title">{{ currentFile.fileName }}</div>
         <div
             class="preview-cover"
             v-if="currentFile.cover"
             :style="{ 'background-image': `url(${filterImgPath(currentFile.cover)})` }"
         >
+            <!-- <img :src="filterImgPath(currentFile.cover)"> -->
             <div class="preview-cover-mask">
                 <div class="preview-cover-mask-btn" @click.stop="showPicturePreview">
                     预览大图
@@ -124,6 +125,8 @@ const openSpecificPath = () => {
             </div>
         </div>
         <div class="preview-form">
+            <div class="preview-form-label">{{ isModeType ? 'MODE名称' : '文件夹名称' }}</div>
+            <div class="preview-form-item preview-type">{{ currentFile.name }}</div>
             <div class="preview-form-label">文件夹类型</div>
             <div class="preview-form-item preview-type">{{ fileType[currentFile.type] }}</div>
             <div class="preview-form-label" v-if="currentFile.desc">
