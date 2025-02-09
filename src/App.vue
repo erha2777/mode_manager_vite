@@ -317,33 +317,13 @@ const selectFile = (item: any) => {
                     clearSelectFile();
                     // 取消选中的是mods文件夹，下面的mod也要取消选中
                     if (item.type === 'modes') {
-                        Object.keys(selectFiles).forEach((key) => {
-                            if (key.indexOf(selectFilePath.value + '/') === 0) {
-                                selectFiles[key] = null;
-                            }
-                        });
-                        // 清空里面的通用mode
-                        Object.keys(generalModes).forEach((key) => {
-                            if (key.indexOf(selectFilePath.value + '/') === 0) {
-                                generalModes[key].splice(0,generalModes[key].length);
-                            }
-                        });
+                        clearSelect();
                     }
                 } else {
                     selectFiles[selectFilePath.value] = item;
                     setCurrentFile(item);
                     // 选中的是上面的mod下面mods文件夹里面选中的也要取消掉
-                    Object.keys(selectFiles).forEach((key) => {
-                        if (key.indexOf(selectFilePath.value + '/') === 0) {
-                            selectFiles[key] = null;
-                        }
-                    });
-                    // 清空通用mode
-                    Object.keys(generalModes).forEach((key) => {
-                        if (key.indexOf(selectFilePath.value + '/') === 0) {
-                            generalModes[key].splice(0,generalModes[key].length);
-                        }
-                    });
+                    clearSelect();
                 }
             } else {
                 selectFiles[selectFilePath.value] = item;
@@ -361,8 +341,11 @@ const setCurrentFile = (item: any) => {
 // 打开modes文件夹
 const openModesFolder = () => {
     // 打开modes文件夹时选中
-    selectFiles[selectFilePath.value] = currentClick.value;
-    setCurrentFile(currentClick.value);
+    if(!selectFiles[selectFilePath.value] || selectFiles[selectFilePath.value].path !== currentClick.value.path) {
+        selectFiles[selectFilePath.value] = currentClick.value;
+        setCurrentFile(currentClick.value);
+        clearSelect();
+    }
     if(currentClick.value?.name) {
         preFolder.push(currentClick.value);
         changeContent(currentClick.value);
@@ -371,6 +354,22 @@ const openModesFolder = () => {
         changeContent(currentFile.value);
     }
 };
+
+// 取消modes内部选中
+const clearSelect = () => {
+    // 取消选中mode
+    Object.keys(selectFiles).forEach((key) => {
+        if (key.indexOf(selectFilePath.value + '/') === 0) {
+            selectFiles[key] = null;
+        }
+    });
+    // 取消选中通用mode
+    Object.keys(generalModes).forEach((key) => {
+        if (key.indexOf(selectFilePath.value + '/') === 0) {
+            generalModes[key].splice(0,generalModes[key].length);
+        }
+    });
+}
 
 // 过滤选择
 const filterActiveFile = (item: any) => {
@@ -627,7 +626,7 @@ const minimize = () => {
                         <div class="file-empty" v-if="folderContent.length === 0">暂无文件</div>
                     </div>
                 </div>
-                
+
                 <Preview :currentFile="currentClick.name ? currentClick : currentFile" :currentFolder="currentFolder" @showEditDialog="showEditDialog" @openModesFolder="openModesFolder"></Preview>
             </div>
             <div class="footer">
