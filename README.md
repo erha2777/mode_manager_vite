@@ -1,5 +1,7 @@
-# Vue 3 + TypeScript + Vite
+# mode_manager
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+一个简单的mode管理器，用来给本地mode添加一些额外信息，进行更好的管理
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+
+<img  src="https://pic1.imgdb.cn/item/67bc373ad0e0a243d4036599.png" />
+<img  src="https://pic1.imgdb.cn/item/67bc373cd0e0a243d403659d.png" />
